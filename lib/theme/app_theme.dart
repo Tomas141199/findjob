@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  static const Color primary = Colors.blue;
+  static const Color primary = Color(0xFF0487D9);
+  static const Color deepBlue = Color(0xFF004D85);
+  static const Color accentPink = Color(0xFFFF2772);
 
   static final ThemeData lightTheme = ThemeData.light().copyWith(
     //Color primario
-    primaryColor: Colors.blue,
+    primaryColor: primary,
     //AppBar Theme
     appBarTheme: const AppBarTheme(color: primary, elevation: 0),
     //TextButton Theme
@@ -29,12 +31,9 @@ class AppTheme {
       ),
       enabledBorder: OutlineInputBorder(
         borderSide: BorderSide(
-          color: primary,
+          color: Colors.grey,
         ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(10),
-          topRight: Radius.circular(10),
-        ),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(
