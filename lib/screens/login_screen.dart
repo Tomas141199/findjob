@@ -1,3 +1,5 @@
+import 'package:findjob_app/screens/home_screen.dart';
+import 'package:findjob_app/screens/registration_screen.dart';
 import 'package:findjob_app/theme/app_theme.dart';
 import 'package:findjob_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +19,7 @@ class LoginScreen extends StatelessWidget {
               ),
               CardContainer(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const SizedBox(
                       height: 10,
@@ -25,10 +28,29 @@ class LoginScreen extends StatelessWidget {
                       "Iniciar sesion",
                       style: Theme.of(context).textTheme.headline5,
                     ),
-                    const SizedBox(
-                      height: 30,
-                    ),
+                    
                     const _LoginForm(),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 15.0),            
+                      child:MaterialButton(
+                        shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                        height: 50.0,
+                        onPressed: () {
+                          Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => RegistrationScreen()),
+                        );
+                      },
+                      color: Color.fromRGBO(0, 77, 133, 1),
+                        child: Text(
+                          'Registrarse',
+                          style: TextStyle(
+                            color: Colors.white
+                          ),
+                        ),
+                      ),   
+                    ),
                   ],
                 ),
               )
@@ -50,6 +72,7 @@ class _LoginForm extends StatelessWidget {
     return Form(
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextFormField(
             autocorrect: false,
@@ -85,29 +108,27 @@ class _LoginForm extends StatelessWidget {
               return "La longitud debe de ser de 6 caracteres";
             },
           ),
-          const SizedBox(
-            height: 30,
-          ),
-          MaterialButton(
+          Padding(
+            padding: EdgeInsets.only(top:25.0,bottom: 15.0),            
+            child:MaterialButton(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),
-              disabledColor: Colors.grey,
-              elevation: 0,
-              color: AppTheme.deepBlue,
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-                child: const Text(
-                  "Ingresar",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+            height: 50.0,
               onPressed: () {
-                print("Validar en la backend");
-              })
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                );
+              },
+              color: Color.fromRGBO(0, 77, 133, 1),
+              child: Text(
+                'Iniciar sesión',
+                style: TextStyle(
+                color: Colors.white
+              )
+            ),
+          ),   
+          ),
         ],
       ),
     );
