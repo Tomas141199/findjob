@@ -5,6 +5,12 @@ class AppTheme {
   static const Color deepBlue = Color(0xFF004D85);
   static const Color accentPink = Color(0xFFFF2772);
 
+  static const TextStyle subEncabezado = TextStyle(
+    fontSize: 20.0,
+    color:deepBlue,
+    fontWeight:FontWeight.w500,
+  );
+
   static final ThemeData lightTheme = ThemeData.light().copyWith(
     //Color primario
     primaryColor: primary,
@@ -14,7 +20,6 @@ class AppTheme {
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(foregroundColor: primary),
     ),
-
     //Floationg action button
     floatingActionButtonTheme:
         const FloatingActionButtonThemeData(backgroundColor: primary),
@@ -33,21 +38,22 @@ class AppTheme {
         borderSide: BorderSide(
           color: Colors.grey,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(10)),
+        borderRadius: BorderRadius.all(Radius.circular(5.0)),
       ),
       focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(
           color: primary,
+          width: 1
         ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(10),
-          topRight: Radius.circular(10),
-        ),
+        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+
       ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(10),
+          bottomRight: Radius.circular(10),
           topRight: Radius.circular(10),
+          topLeft: Radius.circular(10),
         ),
       ),
     ),

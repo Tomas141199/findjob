@@ -31,13 +31,11 @@ class _HeaderLogo extends StatelessWidget {
           height: 100,
           child: Column(
             children: const [
-              SizedBox(
-                height: 40,
-              ),
+              
               Text(
                 "FindJob",
                 style: TextStyle(
-                    fontSize: 50,
+                    fontSize: 30,
                     color: Colors.white,
                     fontWeight: FontWeight.bold),
               ),
