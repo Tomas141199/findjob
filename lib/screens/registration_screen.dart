@@ -1,3 +1,4 @@
+import 'package:findjob_app/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -11,7 +12,6 @@ class RegistrationScreen extends StatefulWidget{
 class _RegistrationScreen extends State<RegistrationScreen>{
 
   bool visible=false;
-
   TextEditingController dateInput = TextEditingController();
  
   @override
@@ -24,7 +24,7 @@ class _RegistrationScreen extends State<RegistrationScreen>{
   Widget build(BuildContext context){
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color.fromRGBO(4, 135, 217, 1),
+        backgroundColor: Theme.of(context).primaryColor,
           appBar: AppBar(
             backgroundColor: Color.fromRGBO(4, 135, 217, 1),
             elevation: 0,
@@ -40,9 +40,14 @@ class _RegistrationScreen extends State<RegistrationScreen>{
               ),
           centerTitle: true,
         ), 
-        body: Center(
+        body: Container(
+          
+          height: double.infinity,
+
+          child:Expanded(
+          child:SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.all(20.0),
+            padding: EdgeInsets.only(top:30.0,right: 25.0,left: 25.0),
             decoration: BoxDecoration(
               color: Color.fromRGBO(255, 252, 252, 1),
               borderRadius: BorderRadius.only(
@@ -50,25 +55,23 @@ class _RegistrationScreen extends State<RegistrationScreen>{
                 topRight: Radius.circular(10),
               ),
             ),
-            child:Row(
+               
+            child:Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Expanded(
-                  child:Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-
-                      Padding(
-                        padding: EdgeInsets.only(top: 30.0),
-                         child:_FormularioInicioSesion(context), 
-                      ),  
-                      
-                    ],
-                  ),
+                Text('Formulario de registro',
+                  style: AppTheme.subEncabezado,
                 ),
+                Padding(
+                  padding: EdgeInsets.only(top: 20.0),
+                   child:_FormularioInicioSesion(context), 
+                ),  
+                
               ],
-            ),
-            
+            ),    
           ),
+        ),
+      ),
         ),
       ),
     );
@@ -81,32 +84,23 @@ class _RegistrationScreen extends State<RegistrationScreen>{
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children:<Widget> [
           Padding(
-            padding: EdgeInsets.only(top:5.0,bottom: 10.0),
+            padding: EdgeInsets.only(top:10.0),            
             child:TextFormField(
-
+              
               style: TextStyle(
                 fontSize: 14.0,
                 color: Colors.black,
               ),
               
+              
               decoration: InputDecoration(
-                hintText: 'Nombre completo...',
+                prefixIcon: Icon(Icons.usb_rounded,color: Colors.transparent,),
+                labelText: "Nombre",
+                hintText: 'Juan Perez Hernandez',
                 contentPadding: const EdgeInsets.symmetric(vertical: 5,horizontal: 5),
                 
-                //Estilo del borde cuando el input esta habilitado
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                  borderSide: BorderSide(color: Colors.grey, width: 1.1),
-                ),
-                
-                focusedBorder: OutlineInputBorder(
-                  gapPadding: 0.0,
-                  borderRadius: BorderRadius.circular(5.0),
-                  borderSide: BorderSide(
-                    color:  Color.fromRGBO(4, 135, 217, 1), 
-                    width: 1
-                  ),
-                ),
+                enabledBorder:AppTheme.lightTheme.inputDecorationTheme.enabledBorder,
+                focusedBorder:AppTheme.lightTheme.inputDecorationTheme.focusedBorder,
               ),
 
               //Se valida el texto que se recibe
@@ -120,7 +114,7 @@ class _RegistrationScreen extends State<RegistrationScreen>{
           ),
           
           Padding(
-              padding: EdgeInsets.only(top:5.0,bottom: 5.0),            
+              padding: EdgeInsets.only(top:20.0),
               child:TextFormField(
               obscureText: !visible,
               style: TextStyle(
@@ -129,8 +123,11 @@ class _RegistrationScreen extends State<RegistrationScreen>{
               ),
 
               decoration: InputDecoration(
-                hintText: 'Contraseña',
+                labelText: "Contraseña",
+                hintText: '*********',
+                prefixIcon: Icon(Icons.lock,color: Colors.transparent,),
                 suffixIcon: IconButton(
+                  
                   icon:new Icon(visible?Icons.visibility:Icons.visibility_off),
                   onPressed: () {
                     setState(() {
@@ -138,36 +135,21 @@ class _RegistrationScreen extends State<RegistrationScreen>{
                     });
                   },
                 ),
-                contentPadding: const EdgeInsets.symmetric(vertical: 5,horizontal: 5),
-                
-                //Estilo del borde cuando el input esta habilitado
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                  borderSide: BorderSide(color: Colors.grey, width: 1.1),
-                ),
-                
-                focusedBorder: OutlineInputBorder(
-                  gapPadding: 0.0,
-                  borderRadius: BorderRadius.circular(5.0),
-                  borderSide: BorderSide(
-                    color:  Color.fromRGBO(4, 135, 217, 1), 
-                    width: 1
-                  ),
-                ),
+                contentPadding: const EdgeInsets.symmetric(vertical: 5,horizontal: 5),      
+                enabledBorder:AppTheme.lightTheme.inputDecorationTheme.enabledBorder,          
+                focusedBorder: AppTheme.lightTheme.inputDecorationTheme.focusedBorder,
               ),
 
               //Se valida el texto que se recibe
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Es necesario ingresar un texto';
-                }
-                return null;
-              },
+             validator: (value) {
+              if (value != null && value.length >= 6) return null;
+              return "La longitud debe de ser de 6 caracteres";
+            },
             ),
           ),
 
           Padding(
-              padding: EdgeInsets.only(top:5.0,bottom: 5.0),            
+              padding: EdgeInsets.only(top:20.0),
               child:TextFormField(
               
                 keyboardType: TextInputType.number,
@@ -181,23 +163,13 @@ class _RegistrationScreen extends State<RegistrationScreen>{
                 ),
 
                 decoration: InputDecoration(
-                  hintText: 'No. Telefono',
+                  labelText: "Telefono",
+                  hintText: '*******890',
+                  prefixIcon: Icon(Icons.phone,color: Colors.transparent,),
                   //suffixIcon: Icon(Icons.eyes),
                   contentPadding: const EdgeInsets.symmetric(vertical: 5,horizontal: 5),
-                  //Estilo del borde cuando el input esta habilitado
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(color: Colors.grey, width: 1.1),
-                  ),
-                
-                  focusedBorder: OutlineInputBorder(
-                    gapPadding: 0.0,
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color:  Color.fromRGBO(4, 135, 217, 1), 
-                      width: 1
-                    ),
-                  ),
+                  enabledBorder:AppTheme.lightTheme.inputDecorationTheme.enabledBorder,          
+                  focusedBorder: AppTheme.lightTheme.inputDecorationTheme.focusedBorder,
                 ),
 
               //Se valida el texto que se recibe
@@ -213,7 +185,7 @@ class _RegistrationScreen extends State<RegistrationScreen>{
 
           /**TextFormField:Correo electronico */
           Padding(
-              padding: EdgeInsets.only(top:5.0,bottom: 5.0),            
+              padding: EdgeInsets.only(top:20.0),
               child:TextFormField(
                 autocorrect: false,
                 keyboardType: TextInputType.emailAddress,
@@ -226,23 +198,11 @@ class _RegistrationScreen extends State<RegistrationScreen>{
                 decoration: InputDecoration(
                   labelText: "Correo",
                   hintText: "job@gmail.com",
-                  prefixIcon: Icon(Icons.alternate_email_rounded),
+                  prefixIcon: Icon(Icons.alternate_email_rounded, color: Colors.transparent,),
                   //suffixIcon: Icon(Icons.eyes),
                   contentPadding: const EdgeInsets.symmetric(vertical: 5,horizontal: 5),
-                  //Estilo del borde cuando el input esta habilitado
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(color: Colors.grey, width: 1.1),
-                  ),
-                
-                  focusedBorder: OutlineInputBorder(
-                    gapPadding: 0.0,
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color:  Color.fromARGB(255, 144, 170, 185), 
-                      width: 1
-                    ),
-                  ),
+                  enabledBorder:AppTheme.lightTheme.inputDecorationTheme.enabledBorder,          
+                  focusedBorder: AppTheme.lightTheme.inputDecorationTheme.focusedBorder,
                 ),
               validator: (value) {
                 String pattern =
@@ -257,7 +217,7 @@ class _RegistrationScreen extends State<RegistrationScreen>{
 
           /**TextFormField:Fecha de nacimiento */
           Padding(
-              padding: EdgeInsets.only(top:5.0,bottom: 5.0),            
+              padding: EdgeInsets.only(top:20.0),
               child:TextFormField(
                 controller: dateInput,
                 readOnly: true,
@@ -267,25 +227,14 @@ class _RegistrationScreen extends State<RegistrationScreen>{
                 ),
 
                 decoration: InputDecoration(
-                  hintText: 'Ingresa la fecha...',
-                  //suffixIcon: Icon(Icons.eyes),
-                  prefixIcon: Icon(Icons.calendar_today), //icon of text field
+                  labelText: "Fecha Nacimiento",
+                  hintText: 'aa/mm/dd',
+                  prefixIcon: Icon(Icons.cake), //icon of text field
                  
                   contentPadding: const EdgeInsets.symmetric(vertical: 5,horizontal: 5),
                   //Estilo del borde cuando el input esta habilitado
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(color: Colors.grey, width: 1.1),
-                  ),
-                
-                  focusedBorder: OutlineInputBorder(
-                    gapPadding: 0.0,
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide(
-                      color:  Color.fromRGBO(4, 135, 217, 1), 
-                      width: 1
-                    ),
-                  ),
+                  enabledBorder:AppTheme.lightTheme.inputDecorationTheme.enabledBorder,          
+                  focusedBorder: AppTheme.lightTheme.inputDecorationTheme.focusedBorder,
                 ),
 
               //Se valida el texto que se recibe
@@ -319,7 +268,7 @@ class _RegistrationScreen extends State<RegistrationScreen>{
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top:25.0,bottom: 15.0),            
+            padding: EdgeInsets.only(top:30.0,bottom:30.0),
             child:MaterialButton(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),
