@@ -1,6 +1,7 @@
 import 'package:findjob_app/screens/home_screen.dart';
 import 'package:findjob_app/screens/registration_screen.dart';
 import 'package:findjob_app/theme/app_theme.dart';
+import 'package:findjob_app/widgets/arguments.dart';
 import 'package:findjob_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -37,9 +38,9 @@ class LoginScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8)),
                         height: 50.0,
                         onPressed: () {
-                          Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => RegistrationScreen()),
+                          Navigator.pushNamed(
+                          context,'agregarUsuario',
+                          arguments: WidgetArguments('modo', 'registro'),
                         );
                       },
                       color: Colors.white,

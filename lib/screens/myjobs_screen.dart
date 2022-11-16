@@ -22,9 +22,8 @@ class _MyJobsScreen extends State<MyJobsScreen>{
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Add your onPressed code here!
-           Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AddJobScreen()),
+           Navigator.pushNamed(
+            context,'agregarOferta'
           );
         },
         elevation: 4,

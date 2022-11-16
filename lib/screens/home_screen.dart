@@ -53,7 +53,8 @@ class _HomeScreen extends State<HomeScreen>{
         ),
           body: Center(
           child: Container(
-            padding: EdgeInsets.all(5),
+            
+            padding: EdgeInsets.only(top:5),
             decoration: BoxDecoration(
               color: Color.fromRGBO(255, 252, 252, 1),
               borderRadius: BorderRadius.only(
