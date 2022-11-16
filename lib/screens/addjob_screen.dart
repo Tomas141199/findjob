@@ -36,6 +36,7 @@ class _AddJobScreen extends State<AddJobScreen>{
 
         child:SingleChildScrollView(
             child: Container(
+              
             padding: EdgeInsets.only(top:30.0,right: 25.0,left: 25.0),
             decoration: BoxDecoration(
               color: Color.fromRGBO(255, 252, 252, 1),
@@ -74,7 +75,14 @@ class _AddJobScreen extends State<AddJobScreen>{
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(top:10.0),
+            padding: EdgeInsets.only(top:5.0),
+             child:Text('Datos generales',
+                  style: AppTheme.subEncabezadoDos,
+                ),
+            ),
+
+          Padding(
+            padding: EdgeInsets.only(top:20.0),
             child: TextFormField(
               style: TextStyle(
                 fontSize: 14.0,
@@ -92,26 +100,7 @@ class _AddJobScreen extends State<AddJobScreen>{
               ),
             ),
           ),
-         Padding(
-            padding: EdgeInsets.only(top:20.0),
-            child: TextFormField(
-              style: TextStyle(
-                fontSize: 14.0,
-                color: Colors.black,
-              ),
 
-              //Decoración del textFormField
-              decoration: InputDecoration(
-                labelText: 'Ubicación',
-                prefixIcon: Icon(Icons.place),
-                //suffixIcon: Icon(Icons.eyes),
-                contentPadding: const EdgeInsets.symmetric(vertical: 5,horizontal: 5),
-                
-                enabledBorder:AppTheme.lightTheme.inputDecorationTheme.enabledBorder,
-                focusedBorder:AppTheme.lightTheme.inputDecorationTheme.focusedBorder,
-              ),
-            ),
-          ),
           Padding(
             padding: EdgeInsets.only(top:20.0),
             child: TextFormField(
@@ -131,6 +120,8 @@ class _AddJobScreen extends State<AddJobScreen>{
               ),
             ),
           ),
+
+          
 
           Padding(
             padding: EdgeInsets.only(top:20.0),
@@ -152,6 +143,7 @@ class _AddJobScreen extends State<AddJobScreen>{
               ),
             ),
           ),
+
           //Sección de la descripción del empleo
           Padding(
             padding: EdgeInsets.only(top:20.0),
@@ -172,6 +164,81 @@ class _AddJobScreen extends State<AddJobScreen>{
               ),
             ),
           ),
+
+          /**DATOS DE LA UBICACIÓN DEL LUGAR*/
+          Padding(
+            padding: EdgeInsets.only(top:20.0),
+             child:Text('Datos de localización',
+                  style: AppTheme.subEncabezadoDos,
+                ),
+            ),
+         
+
+         Padding(
+            padding: EdgeInsets.only(top:20.0),
+            child: TextFormField(
+              style: TextStyle(
+                fontSize: 14.0,
+                color: Colors.black,
+              ),
+
+              //Decoración del textFormField
+              decoration: InputDecoration(
+                labelText: 'Dirección',
+                prefixIcon: Icon(Icons.place),
+                //suffixIcon: Icon(Icons.eyes),
+                contentPadding: const EdgeInsets.symmetric(vertical: 5,horizontal: 5),
+                
+                enabledBorder:AppTheme.lightTheme.inputDecorationTheme.enabledBorder,
+                focusedBorder:AppTheme.lightTheme.inputDecorationTheme.focusedBorder,
+              ),
+            ),
+          ),
+
+          Padding(
+            padding: EdgeInsets.only(top:20.0),
+            child: TextFormField(
+              style: TextStyle(
+                fontSize: 14.0,
+                color: Colors.black,
+              ),
+
+              //Decoración del textFormField
+              decoration: InputDecoration(
+                labelText: 'Ciudad',
+                prefixIcon: Icon(Icons.location_city),
+                //suffixIcon: Icon(Icons.eyes),
+                contentPadding: const EdgeInsets.symmetric(vertical: 5,horizontal: 5),
+                
+                enabledBorder:AppTheme.lightTheme.inputDecorationTheme.enabledBorder,
+                focusedBorder:AppTheme.lightTheme.inputDecorationTheme.focusedBorder,
+              ),
+            ),
+          ),
+
+          Padding(
+            padding: EdgeInsets.only(top:20.0),
+            child: TextFormField(
+              style: TextStyle(
+                fontSize: 14.0,
+                color: Colors.black,
+              ),
+
+              //Decoración del textFormField
+              decoration: InputDecoration(
+                labelText: 'Municipio/Entidad',
+                prefixIcon: Icon(Icons.location_city_sharp),
+                //suffixIcon: Icon(Icons.eyes),
+                contentPadding: const EdgeInsets.symmetric(vertical: 5,horizontal: 5),
+                
+                enabledBorder:AppTheme.lightTheme.inputDecorationTheme.enabledBorder,
+                focusedBorder:AppTheme.lightTheme.inputDecorationTheme.focusedBorder,
+              ),
+            ),
+          ),
+
+         
+      
           Padding(
             padding: EdgeInsets.only(top:30.0,bottom:30.0),
             child:MaterialButton(

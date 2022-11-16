@@ -4,13 +4,29 @@ class AppTheme {
   static const Color primary = Color(0xFF0487D9);
   static const Color deepBlue = Color(0xFF004D85);
   static const Color accentPink = Color(0xFFFF2772);
-
+  static const Color textColor = Color.fromRGBO(13, 13, 13, 1);
   static const TextStyle subEncabezado = TextStyle(
     fontSize: 20.0,
     color:deepBlue,
     fontWeight:FontWeight.w500,
   );
 
+  static const TextStyle subEncabezadoDos = TextStyle(
+    fontSize: 16.0,
+    color:deepBlue,
+    fontWeight:FontWeight.w400,
+  );
+
+  static const TextStyle subEncabezadoTres = TextStyle(
+    fontSize: 25.0,
+    color:deepBlue,
+    fontWeight:FontWeight.w500,
+  );
+
+  static const TextStyle datos = TextStyle(
+    fontSize: 14.0,
+    color:textColor,
+  );
   static final ThemeData lightTheme = ThemeData.light().copyWith(
     //Color primario
     primaryColor: primary,
@@ -46,8 +62,8 @@ class AppTheme {
           width: 1
         ),
         borderRadius: BorderRadius.all(Radius.circular(5.0)),
-
       ),
+      
       border: OutlineInputBorder(
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(10),

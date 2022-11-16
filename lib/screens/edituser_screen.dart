@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-class RegistrationScreen extends StatelessWidget{
+class EditionScreen extends StatelessWidget{
 
-  const RegistrationScreen({Key? key}):super(key: key);
+  const EditionScreen({Key? key}):super(key: key);
 
   @override
   Widget build(BuildContext context){
@@ -46,7 +46,7 @@ class RegistrationScreen extends StatelessWidget{
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   Padding(padding: EdgeInsets.only(bottom: 20.0),
-                    child: Text('Formulario de registro',
+                    child: Text('Formulario de edición',
                       style: AppTheme.subEncabezado,
                     ),
                   ),
