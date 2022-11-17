@@ -10,12 +10,10 @@ class CardContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 0),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Container(
         width: double.infinity,
-        height: height,
         padding: const EdgeInsets.all(20),
         decoration: _createCardShape(),
         child: child,
@@ -24,16 +22,14 @@ class CardContainer extends StatelessWidget {
   }
 
   BoxDecoration _createCardShape() => const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(25),
-            topRight: Radius.circular(25),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 15,
-              offset: Offset(0, 10),
-            )
-          ]);
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(15)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 15,
+            offset: Offset(0, 10),
+          )
+        ],
+      );
 }

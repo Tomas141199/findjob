@@ -21,23 +21,23 @@ class AuthBackground extends StatelessWidget {
 }
 
 class _HeaderLogo extends StatelessWidget {
-  const _HeaderLogo({super.key});
+  const _HeaderLogo();
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: SizedBox(
+      child: Container(
+          margin: const EdgeInsets.only(top: 80),
           width: double.infinity,
-          height: 100,
           child: Column(
             children: const [
-              
               Text(
                 "FindJob",
                 style: TextStyle(
-                    fontSize: 30,
+                    fontFamily: "OpenSans",
+                    fontSize: 60,
                     color: Colors.white,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.w800),
               ),
             ],
           )),
