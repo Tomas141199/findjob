@@ -23,7 +23,7 @@ class WidgetOfertaDos extends StatelessWidget{
           contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
           title: Text('$puesto',style: AppTheme.subEncabezadoDos),
           subtitle: Text(
-              'Pulicado- $fecha',style: AppTheme.datos,),
+              'Publicado- $fecha',style: AppTheme.datos,),
           leading:Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[

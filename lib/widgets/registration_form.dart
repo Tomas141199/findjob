@@ -263,7 +263,7 @@ class _RegistrationForm extends State<RegistrationForm>{
               },
               color: Color.fromRGBO(0, 77, 133, 1),
               child: Text(
-                'Registrarse',
+                modoEdicion?'Guardar cambios':'Registrarse',
                 style: TextStyle(
                 color: Colors.white
               )

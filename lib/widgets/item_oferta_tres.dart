@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
 
-class WidgetOferta extends StatelessWidget{
+class WidgetOfertaTres extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
 
     String puesto="Nombre del trabajo";
-    String establecimiento="Establecimiento";
     String fecha="12/12/2022";
-    String salario="0.0";
+    String estado="Pendiente";
     return Card(
 
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -24,25 +23,14 @@ class WidgetOferta extends StatelessWidget{
           contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
           title: Text('$puesto',style: AppTheme.subEncabezadoDos),
           subtitle: Text(
-              '$establecimiento \nPublicado- $fecha',style: AppTheme.datos,),
+              'Publicado- $fecha \nRespuesta- $estado',style: AppTheme.datos,),
           leading:Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Icon(Icons.work, color: Colors.blueGrey,size: 32.0,),
             ],
           ),
-          trailing: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Wrap(
-                children: <Widget>[
-                  Icon(Icons.attach_money_outlined), 
-                  Text(salario,style: AppTheme.datos,),
-                ],
-              ),
-            ],  
-          ),
-          
+          trailing:  Icon(Icons.more_vert, color: Colors.blueGrey,size: 32.0,),
           
           //Icon(Icons.monetization_on)
           //Text('$salario')
