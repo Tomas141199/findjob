@@ -1,4 +1,3 @@
-import 'package:findjob_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
