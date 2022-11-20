@@ -1,4 +1,5 @@
 import 'package:findjob_app/screens/addjob_screen.dart';
+import 'package:findjob_app/widgets/item_oferta_dos.dart';
 import 'package:flutter/material.dart';
 
 class MyJobsScreen extends StatefulWidget{
@@ -12,11 +13,11 @@ class _MyJobsScreen extends State<MyJobsScreen>{
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      body: Center(
-        child: Text(
-          'Interfaz de mis ofertas',
-        ),
-      ),
+      body:CustomScrollView(
+        slivers:<Widget> [
+          _listaItemMisOfertas(),
+        ],
+      ),  
       
 
       floatingActionButton: FloatingActionButton(
@@ -29,6 +30,17 @@ class _MyJobsScreen extends State<MyJobsScreen>{
         elevation: 4,
         child: const Icon(Icons.add),
         backgroundColor: Color.fromRGBO(255, 39, 114, 1),
+      ),
+    );
+  }
+
+  Widget _listaItemMisOfertas(){
+    return SliverList(
+      delegate: SliverChildListDelegate(
+        List.generate(3, (int index){
+          return WidgetOfertaDos();
+        }
+      ),
       ),
     );
   }

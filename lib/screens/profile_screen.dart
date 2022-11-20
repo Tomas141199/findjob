@@ -1,5 +1,5 @@
-import 'dart:ffi';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:findjob_app/screens/edituser_screen.dart';
 import 'package:findjob_app/theme/app_theme.dart';
 import 'package:findjob_app/widgets/arguments.dart';
@@ -28,7 +28,32 @@ class _ProfileScreen extends State<ProfileScreen>{
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               
-              _profileImage(),
+              
+                Container(
+                  
+                  margin: EdgeInsets.only(top: 20.0,bottom: 20.0,right:100.0,left: 100.0),
+                  width: 200.0,
+                  height: 200.0,
+                  decoration: new BoxDecoration( 
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Color.fromRGBO(13, 13, 13, 0.8), width: 2),
+                  ),
+
+                  child:CircleAvatar(
+                    radius: 150,
+                    backgroundColor: Color.fromRGBO(13, 13, 13, 0.8),
+                    child: Padding(
+                      padding: const EdgeInsets.all(0), // Border radius
+                      child: ClipOval(
+                        child: SizedBox.fromSize(
+                          size: Size.fromRadius(90), // Image radius
+                          child: _profileImage(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  
+                ),
 
               Text('$userName',
                 style: AppTheme.subEncabezado,
@@ -120,19 +145,22 @@ class _ProfileScreen extends State<ProfileScreen>{
 
   //Foto de perfil del usuario
   Widget _profileImage(){
-    return Container(
-      margin: EdgeInsets.only(top: 20.0,bottom: 20.0),
-      width: 150.0,
-      height: 150.0,
-      decoration: new BoxDecoration( 
-        shape: BoxShape.circle,
-        image: new DecorationImage(
-          fit: BoxFit.fitHeight,
-          image: new NetworkImage("https://i.imgur.com/BoN9kdC.png")
+    return CachedNetworkImage(
+      imageUrl: "http://via.placeholder.com/200x150",
+      imageBuilder: (context, imageProvider) => Container(
+        decoration: BoxDecoration(  
+          image: new DecorationImage(
+            fit: BoxFit.fill,
+            image: new NetworkImage("https://i.imgur.com/BoN9kdC.png"),
+          ),
         ),
       ),
+      progressIndicatorBuilder: (context, url, downloadProgress) => 
+      CircularProgressIndicator(value: downloadProgress.progress),
+      errorWidget: (context, url, error) => Icon(Icons.error),
     );
   }
+
 
   Widget _edit(){
     return FloatingActionButton(

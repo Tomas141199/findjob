@@ -15,16 +15,6 @@ class EditionScreen extends StatelessWidget{
           appBar: AppBar(
             backgroundColor: Color.fromRGBO(4, 135, 217, 1),
             elevation: 0,
-            title: const Text(
-                "FindJob",
-                textAlign: TextAlign.center,
-                style:TextStyle(
-                  color:Color.fromRGBO(255, 252, 252, 1),
-                  fontSize:25.0,
-                  fontWeight: FontWeight.bold,
-                  fontFamily:'Arial',
-                )
-              ),
           centerTitle: true,
         ), 
         body: Container(
