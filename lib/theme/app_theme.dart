@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 class AppTheme {
@@ -6,6 +7,11 @@ class AppTheme {
   static const Color accentPink = Color(0xFFFF2772);
   static const Color textColor = Color.fromRGBO(13, 13, 13, 1);
   static const Color whiteApp = Color(0xFFFFFDFC);
+
+  static Color getRandomColor() {
+    return Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
+        .withOpacity(1.0);
+  }
 
   static const BoxDecoration backgroundRounded = BoxDecoration(
       color: Colors.white,

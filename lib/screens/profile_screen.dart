@@ -3,7 +3,6 @@ import 'package:findjob_app/theme/app_theme.dart';
 import 'package:findjob_app/models/models.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
@@ -30,34 +29,30 @@ class _ProfileScreen extends State<ProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                
                 Container(
-                  
-                  margin: EdgeInsets.only(top: 20.0,bottom: 20.0,right:100.0,left: 100.0),
+                  margin: const EdgeInsets.only(
+                      top: 20.0, bottom: 20.0, right: 100.0, left: 100.0),
                   width: 200.0,
                   height: 200.0,
-                  decoration: new BoxDecoration( 
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: Color.fromRGBO(13, 13, 13, 0.8), width: 2),
+                    border: Border.all(
+                        color: const Color.fromRGBO(13, 13, 13, 0.8), width: 2),
                   ),
-
-                  child:CircleAvatar(
+                  child: CircleAvatar(
                     radius: 150,
-                    backgroundColor: Color.fromRGBO(13, 13, 13, 0.8),
+                    backgroundColor: const Color.fromRGBO(13, 13, 13, 0.8),
                     child: Padding(
                       padding: const EdgeInsets.all(0), // Border radius
                       child: ClipOval(
                         child: SizedBox.fromSize(
-                          size: Size.fromRadius(90), // Image radius
+                          size: const Size.fromRadius(90), // Image radius
                           child: _profileImage(),
                         ),
                       ),
                     ),
                   ),
-                  
                 ),
-
-
                 const Text(
                   userName,
                   style: AppTheme.subEncabezado,
@@ -141,20 +136,21 @@ class _ProfileScreen extends State<ProfileScreen> {
   }
 
   //Foto de perfil del usuario
-  Widget _profileImage(){
+  Widget _profileImage() {
     return CachedNetworkImage(
-      imageUrl: "http://via.placeholder.com/200x150",
+      imageUrl:
+          "https://postila.ru/data/fd/d6/ca/4a/fdd6ca4ab7a95300e80ec242861f497e16ab4df12715141b89bcc96843c64f60.gif",
       imageBuilder: (context, imageProvider) => Container(
-        decoration: BoxDecoration(  
-          image: new DecorationImage(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
             fit: BoxFit.fill,
-            image: new NetworkImage("https://i.imgur.com/BoN9kdC.png"),
+            image: NetworkImage("https://i.imgur.com/BoN9kdC.png"),
           ),
         ),
       ),
-      progressIndicatorBuilder: (context, url, downloadProgress) => 
-      CircularProgressIndicator(value: downloadProgress.progress),
-      errorWidget: (context, url, error) => Icon(Icons.error),
+      progressIndicatorBuilder: (context, url, downloadProgress) =>
+          CircularProgressIndicator(value: downloadProgress.progress),
+      errorWidget: (context, url, error) => const Icon(Icons.error),
     );
   }
 

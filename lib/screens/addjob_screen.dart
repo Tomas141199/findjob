@@ -12,36 +12,44 @@ class AddJobScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.primary,
-      appBar: AppBar(
-        backgroundColor: AppTheme.primary,
-        elevation: 0,
-        centerTitle: true,
-        title: const Text("Crear oferta laboral",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'OpenSans',
-            )),
-      ),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.only(top: 30.0, right: 25.0, left: 25.0),
           decoration: _backgroundScaffold(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              const Text(
-                'Registrar oferta laboral',
-                style: AppTheme.subEncabezado,
-              ),
               Stack(
-                children: const [
-                  JobImage(),
+                children: [
+                  const JobImage(),
+                  Positioned(
+                    top: 60,
+                    left: 20,
+                    child: IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new,
+                        size: 40,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 60,
+                    right: 20,
+                    child: IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(
+                        Icons.camera_alt_rounded,
+                        size: 40,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ],
               ),
               Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
+                  padding:
+                      const EdgeInsets.only(top: 30.0, right: 25.0, left: 25.0),
                   child: ChangeNotifierProvider(
                     create: (_) => JobFormProvider(),
                     child: const _FormJob(),

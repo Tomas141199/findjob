@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:findjob_app/providers/providers.dart';
 import 'package:findjob_app/router/app_routes.dart';
 import 'package:findjob_app/services/services.dart';
 import 'package:findjob_app/theme/app_theme.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 void main() {
   runApp(const AppState());
@@ -18,6 +18,7 @@ class AppState extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => UiProvider()),
+        ChangeNotifierProvider(create: (_) => JobsService()),
       ],
       child: const MyApp(),
     );

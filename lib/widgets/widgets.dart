@@ -1,3 +1,4 @@
+export 'package:findjob_app/widgets/item_oferta.dart';
 export 'package:findjob_app/widgets/custom_navigationbar.dart';
 export 'package:findjob_app/widgets/job_image.dart';
 export 'package:findjob_app/widgets/register_form.dart';

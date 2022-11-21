@@ -1,3 +1,4 @@
+export 'package:findjob_app/screens/loading_screen.dart';
 export 'package:findjob_app/screens/messages_screen.dart';
 export 'package:findjob_app/screens/profile_screen.dart';
 export 'package:findjob_app/screens/jobs_screen.dart';
