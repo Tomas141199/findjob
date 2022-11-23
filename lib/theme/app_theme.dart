@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 class AppTheme {
@@ -5,29 +6,44 @@ class AppTheme {
   static const Color deepBlue = Color(0xFF004D85);
   static const Color accentPink = Color(0xFFFF2772);
   static const Color textColor = Color.fromRGBO(13, 13, 13, 1);
+  static const Color whiteApp = Color(0xFFFFFDFC);
+
+  static Color getRandomColor() {
+    return Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
+        .withOpacity(1.0);
+  }
+
+  static const BoxDecoration backgroundRounded = BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(10),
+        topRight: Radius.circular(10),
+      ));
+
   static const TextStyle subEncabezado = TextStyle(
     fontSize: 20.0,
-    color:deepBlue,
-    fontWeight:FontWeight.w500,
+    color: deepBlue,
+    fontWeight: FontWeight.w500,
   );
 
   static const TextStyle subEncabezadoDos = TextStyle(
     fontSize: 16.0,
-    color:deepBlue,
-    fontWeight:FontWeight.w400,
+    color: deepBlue,
+    fontWeight: FontWeight.w400,
   );
 
   static const TextStyle subEncabezadoTres = TextStyle(
     fontSize: 25.0,
-    color:deepBlue,
-    fontWeight:FontWeight.w500,
+    color: deepBlue,
+    fontWeight: FontWeight.w500,
   );
 
   static const TextStyle datos = TextStyle(
     fontSize: 14.0,
-    color:textColor,
+    color: textColor,
   );
   static final ThemeData lightTheme = ThemeData.light().copyWith(
+    disabledColor: deepBlue,
     //Color primario
     primaryColor: primary,
     //AppBar Theme
@@ -57,13 +73,10 @@ class AppTheme {
         borderRadius: BorderRadius.all(Radius.circular(5.0)),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: primary,
-          width: 1
-        ),
+        borderSide: BorderSide(color: primary, width: 1),
         borderRadius: BorderRadius.all(Radius.circular(5.0)),
       ),
-      
+      contentPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(10),
