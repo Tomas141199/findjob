@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 
 class JobImage extends StatelessWidget {
-  const JobImage({super.key});
+  final String? url;
+  const JobImage({super.key, this.url});
 
   @override
   Widget build(BuildContext context) {
@@ -11,20 +13,41 @@ class JobImage extends StatelessWidget {
         height: 450,
         width: double.infinity,
         decoration: _buildBoxDecoration(),
-        child: const ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-          child: FadeInImage(
-            image: NetworkImage(
-                "https://d500.epimg.net/cincodias/imagenes/2019/11/04/lifestyle/1572892359_005767_1572892909_noticia_normal.jpg"),
-            placeholder: AssetImage('assets/jar-loading.gif'),
-            fit: BoxFit.cover,
+        child: Opacity(
+          opacity: 0.8,
+          child: ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(15)),
+            child: getImage(url),
           ),
         ),
       ),
     );
   }
 
+  Widget getImage(String? picture) {
+    if (picture == null) {
+      return const Image(
+        image: AssetImage('assets/no-image.png'),
+        fit: BoxFit.cover,
+      );
+    }
+
+    if (picture.startsWith('http')) {
+      return FadeInImage(
+        image: NetworkImage(picture),
+        placeholder: const AssetImage('assets/jar-loading.gif'),
+        fit: BoxFit.cover,
+      );
+    }
+
+    return Image.file(
+      File(picture),
+      fit: BoxFit.cover,
+    );
+  }
+
   BoxDecoration _buildBoxDecoration() => BoxDecoration(
+          color: Colors.black,
           borderRadius: const BorderRadius.all(
             Radius.circular(10),
           ),

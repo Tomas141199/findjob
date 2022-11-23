@@ -24,7 +24,10 @@ class _SearchScreen extends State<SearchScreen> {
       body: ListView.builder(
         itemCount: jobsList.length,
         itemBuilder: (BuildContext context, int index) => GestureDetector(
-          onTap: () => Navigator.pushNamed(context, 'agregarOferta'),
+          onTap: () {
+            jobsService.selectedJob = jobsList[index].copy();
+            Navigator.pushNamed(context, 'agregarOferta');
+          },
           child: JobCard(job: jobsList[index]),
         ),
       ),

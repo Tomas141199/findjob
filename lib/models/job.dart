@@ -16,6 +16,8 @@ class Job {
     required this.title,
     required this.establishment,
     required this.city,
+    required this.address,
+    required this.town,
   });
 
   String? id;
@@ -24,10 +26,12 @@ class Job {
   String description;
   String? picture;
   String publishedAt;
-  int salary;
+  double salary;
   String title;
   String establishment;
   String city;
+  String address;
+  String town;
 
   factory Job.fromJson(String str) => Job.fromMap(json.decode(str));
 
@@ -39,10 +43,12 @@ class Job {
         description: json["description"],
         picture: json["picture"],
         publishedAt: json["published_at"],
-        salary: json["salary"],
+        salary: json["salary"].toDouble(),
         title: json["title"],
         establishment: json["establishment"],
         city: json["city"],
+        address: json["address"],
+        town: json["town"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -55,5 +61,22 @@ class Job {
         "title": title,
         "establishment": establishment,
         "city": city,
+        "address": address,
+        "town": town,
       };
+
+  Job copy() => Job(
+        id: id,
+        author: author,
+        authorId: authorId,
+        description: description,
+        picture: picture,
+        publishedAt: publishedAt,
+        salary: salary,
+        title: title,
+        establishment: establishment,
+        city: city,
+        address: address,
+        town: town,
+      );
 }

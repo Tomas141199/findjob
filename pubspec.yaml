@@ -36,6 +36,8 @@ dependencies:
     sdk: flutter
   flutter_secure_storage: ^6.0.0
   http: ^0.13.5
+  image_picker: ^0.8.6
+  intl: ^0.17.0
   provider: ^6.0.4
   secure_storage_local_storage_inspector: ^0.4.0
 dev_dependencies:

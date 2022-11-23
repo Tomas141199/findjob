@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:findjob_app/models/models.dart';
 
 class JobFormProvider extends ChangeNotifier {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  Job job;
 
-  String name = "";
-  String photoUrl = "";
-  String job = "";
-  String salary = "";
-  String description = "";
-  String address = "";
-  String city = "";
-  String town = "";
+  JobFormProvider(this.job);
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -21,6 +16,7 @@ class JobFormProvider extends ChangeNotifier {
   }
 
   bool isValidForm() {
+    print("Form validado " + job.title);
     print(formKey.currentState?.validate());
     return formKey.currentState?.validate() ?? false;
   }

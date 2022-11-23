@@ -1,7 +1,6 @@
-import 'package:findjob_app/screens/missolicitudes_screen.dart';
-import 'package:findjob_app/screens/myjobs_screen.dart';
-import 'package:findjob_app/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:findjob_app/screens/screens.dart';
+import 'package:findjob_app/theme/app_theme.dart';
 
 class JobsScreen extends StatefulWidget {
   const JobsScreen({Key? key}) : super(key: key);

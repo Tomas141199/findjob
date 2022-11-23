@@ -1,12 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:findjob_app/services/services.dart';
 import 'package:findjob_app/providers/providers.dart';
 import 'package:findjob_app/validator/validator.dart';
 import 'package:findjob_app/widgets/widgets.dart';
 import 'package:findjob_app/theme/app_theme.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddJobScreen extends StatelessWidget {
   const AddJobScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final jobService = Provider.of<JobsService>(context);
+    return ChangeNotifierProvider(
+      create: (_) => JobFormProvider(jobService.selectedJob),
+      child: _JobBodyScreen(jobService: jobService),
+    );
+  }
+}
+
+class _JobBodyScreen extends StatelessWidget {
+  const _JobBodyScreen({
+    Key? key,
+    required this.jobService,
+  }) : super(key: key);
+
+  final JobsService jobService;
 
   @override
   Widget build(BuildContext context) {
@@ -16,46 +37,56 @@ class AddJobScreen extends StatelessWidget {
         child: Container(
           decoration: _backgroundScaffold(),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Stack(
-                children: [
-                  const JobImage(),
-                  Positioned(
-                    top: 60,
-                    left: 20,
-                    child: IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(
-                        Icons.arrow_back_ios_new,
-                        size: 40,
-                        color: Colors.white,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Stack(
+                  children: [
+                    JobImage(
+                      url: jobService.selectedJob.picture,
+                    ),
+                    Positioned(
+                      top: 60,
+                      left: 20,
+                      child: IconButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: const Icon(
+                          Icons.arrow_back_ios_new,
+                          size: 40,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                  ),
-                  Positioned(
-                    top: 60,
-                    right: 20,
-                    child: IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(
-                        Icons.camera_alt_rounded,
-                        size: 40,
-                        color: Colors.white,
+                    Positioned(
+                      top: 60,
+                      right: 20,
+                      child: IconButton(
+                        onPressed: () async {
+                          final picker = ImagePicker();
+                          final PickedFile? pickedFile = await picker.getImage(
+                              source: ImageSource.camera, imageQuality: 100);
+
+                          if (pickedFile == null) {
+                            print('no selecciono nada');
+                            return;
+                          }
+                          print('Tenemos imagen ${pickedFile.path}');
+                          jobService
+                              .updateSelectedProductImage(pickedFile.path);
+                        },
+                        icon: const Icon(
+                          Icons.camera_alt_rounded,
+                          size: 40,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Padding(
-                  padding:
-                      const EdgeInsets.only(top: 30.0, right: 25.0, left: 25.0),
-                  child: ChangeNotifierProvider(
-                    create: (_) => JobFormProvider(),
-                    child: const _FormJob(),
-                  )),
-            ],
-          ),
+                  ],
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 30.0, right: 25.0, left: 25.0),
+                  child: _FormJob(),
+                ),
+              ]),
         ),
       ),
     );
@@ -80,6 +111,9 @@ class _FormJob extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final jobForm = Provider.of<JobFormProvider>(context);
+    final job = jobForm.job;
+    final jobService = Provider.of<JobsService>(context);
+
     return Form(
       key: jobForm.formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -107,7 +141,8 @@ class _FormJob extends StatelessWidget {
               validator: (value) {
                 return value!.notEmpty;
               },
-              onChanged: (value) => jobForm.name = value,
+              initialValue: job.establishment,
+              onChanged: (value) => job.establishment = value,
             ),
           ),
 
@@ -124,13 +159,15 @@ class _FormJob extends StatelessWidget {
               validator: (value) {
                 return value!.notEmpty;
               },
-              onChanged: (value) => jobForm.job = value,
+              initialValue: job.title,
+              onChanged: (value) => job.title = value,
             ),
           ),
 
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: TextFormField(
+              keyboardType: TextInputType.number,
               style: _getTextStyleForm(),
               //Decoración del textFormField
               decoration: const InputDecoration(
@@ -141,7 +178,17 @@ class _FormJob extends StatelessWidget {
               validator: (value) {
                 return value!.notEmpty;
               },
-              onChanged: (value) => jobForm.salary = value,
+              initialValue: '${job.salary}',
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))
+              ],
+              onChanged: (value) {
+                if (double.tryParse(value) == null) {
+                  job.salary = 0;
+                } else {
+                  job.salary = double.parse(value);
+                }
+              },
             ),
           ),
 
@@ -160,7 +207,8 @@ class _FormJob extends StatelessWidget {
               validator: (value) {
                 return value!.notEmpty;
               },
-              onChanged: (value) => jobForm.description = value,
+              initialValue: job.description,
+              onChanged: (value) => job.description = value,
             ),
           ),
 
@@ -187,7 +235,8 @@ class _FormJob extends StatelessWidget {
               validator: (value) {
                 return value!.notEmpty;
               },
-              onChanged: (value) => jobForm.address = value,
+              initialValue: job.address,
+              onChanged: (value) => job.address = value,
             ),
           ),
 
@@ -205,7 +254,8 @@ class _FormJob extends StatelessWidget {
               validator: (value) {
                 return value!.notEmpty;
               },
-              onChanged: (value) => jobForm.city = value,
+              initialValue: job.city,
+              onChanged: (value) => job.city = value,
             ),
           ),
 
@@ -222,7 +272,8 @@ class _FormJob extends StatelessWidget {
               validator: (value) {
                 return value!.notEmpty;
               },
-              onChanged: (value) => jobForm.town = value,
+              initialValue: job.town,
+              onChanged: (value) => job.town = value,
             ),
           ),
 
@@ -232,7 +283,10 @@ class _FormJob extends StatelessWidget {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),
               height: 50.0,
-              onPressed: () {},
+              onPressed: () async {
+                if (!jobForm.isValidForm()) return;
+                await jobService.saveOrCreateJob(jobForm.job);
+              },
               color: AppTheme.deepBlue,
               child:
                   const Text('Publicar', style: TextStyle(color: Colors.white)),

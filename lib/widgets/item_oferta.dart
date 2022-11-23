@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:findjob_app/theme/app_theme.dart';
-
-import '../models/models.dart';
+import 'package:findjob_app/models/models.dart';
 
 class JobCard extends StatelessWidget {
   final Job job;
@@ -201,7 +201,7 @@ class _CardTopBar extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               Text(
-                "$published - $author",
+                "${DateFormat('yMd').format(DateTime.parse(published))} - $author",
                 style: TextStyle(color: Colors.grey.shade500),
               ),
             ],
