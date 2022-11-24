@@ -285,6 +285,10 @@ class _FormJob extends StatelessWidget {
               height: 50.0,
               onPressed: () async {
                 if (!jobForm.isValidForm()) return;
+                final String? imageUrl = await jobService.uploadImage();
+
+                if (imageUrl != null) jobForm.job.picture = imageUrl;
+
                 await jobService.saveOrCreateJob(jobForm.job);
               },
               color: AppTheme.deepBlue,
