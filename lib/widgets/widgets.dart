@@ -5,3 +5,7 @@ export 'package:findjob_app/widgets/job_image.dart';
 export 'package:findjob_app/widgets/register_form.dart';
 export 'package:findjob_app/widgets/card_container.dart';
 export 'package:findjob_app/widgets/auth_background.dart';
+export 'package:findjob_app/widgets/chat_header.dart';
+export 'package:findjob_app/widgets/item_chat.dart';
+export 'package:findjob_app/widgets/message_widget.dart';
+export 'package:findjob_app/widgets/new_message_widget.dart';
