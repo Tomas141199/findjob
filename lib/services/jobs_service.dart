@@ -12,8 +12,10 @@ class JobsService extends ChangeNotifier {
   final List<Job> jobs = [];
   final List<Job> myJobs = [];
 
-  final List<JobSolicitud> solicitudes = [];
-  final List<Job> myJobsSolicitados = [];
+  final List<JobSolicitud> solicitudes = [];//Del lado del usuario(Aspirante)
+  final List<JobSolicitud> aspirantes = [];//Del lado del empleador
+
+  final List<Job> myJobsSolicitados = [];//Del usuario (Aspirante)
 
   late Job selectedJob;
   File? newPictureFile;
@@ -22,11 +24,11 @@ class JobsService extends ChangeNotifier {
 
   JobsService() {
     loadJobs();
-    loadMyJobs();
-    loadSolicitudes();
   }
 
   Future<List<Job>> loadJobs() async {
+    jobs.clear();
+
     isLoading = true;
     notifyListeners();
     final url = Uri.https(_baseUrl, 'jobs.json');
@@ -38,12 +40,23 @@ class JobsService extends ChangeNotifier {
       tempJob.id = key;
       jobs.add(tempJob);
     });
+
+        print("Cargaremos las solicitudes hechas");
+
+
+    if(jobs.length>=0){
+        print("Cargaremos las solicitudes hechas");
+        loadSolicitudes();
+    }
+
     isLoading = false;
     notifyListeners();
     return jobs;
   }
 
   Future<List<Job>> loadMyJobs() async {
+    /**Este método se encarga de obtener los empleos que el usuario haya ofertado */
+    myJobs.clear();
     isLoading = true;
     notifyListeners();
     final url = Uri.https(_baseUrl, 'jobs.json');
@@ -171,10 +184,38 @@ class JobsService extends ChangeNotifier {
     jobSolicitud.id = decodeData['name'];
 
     solicitudes.add(jobSolicitud);
+
+    //Si un usuario se postula actualizamos su lista de postulaciones
+    cargarMisPostulaciones();
+    return jobSolicitud.id!;
+  }
+
+  Future<String> agregarAspiranteJob(Job job) async {
+    
+    //Id del usuario logueado (aspirante)
+    var idUserLogueado=await storage.read(key: "user_id") ?? '';
+    var idEmpleo=job.id;
+    var idEmpleador=job.authorId;
+    var nombreEmpleador=job.author;
+    JobSolicitud jobSolicitud;
+    //Mostramos los datos del trabajo seleccionado
+
+    jobSolicitud=new JobSolicitud(idSolicitante: idUserLogueado, idEmpleo: idEmpleo, idEmpleador: idEmpleador, nombreEmpleador: nombreEmpleador, solicitadoAt: DateTime.now().toString());
+
+    final url = Uri.https(_baseUrl, 'solicitudes/${idEmpleo}.json');
+    final resp = await http.post(url, body: jobSolicitud.toJson());
+    final decodeData = json.decode(resp.body);
+
+    jobSolicitud.id = decodeData['name'];
+
     return jobSolicitud.id!;
   }
 
   Future<List<JobSolicitud>> loadSolicitudes() async {
+    /**Este método se encarga de verificar si el usuario 
+     * ha enviado alguna solicitud de postulación hacia alguna oferta laboral */
+
+    solicitudes.clear();
     isLoading = true;
     notifyListeners();
     
@@ -191,18 +232,25 @@ class JobsService extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
 
-    if(solicitudes.length>0){
+    if(solicitudes.length>=0){
+      print("Hay postulaciones disponibles");
         //Significa que hay postulaciones
         cargarMisPostulaciones();
+    }else{
+      print("No Hay postulaciones disponibles");
     }
 
     return solicitudes;
   }
 
   Future<List<Job>> cargarMisPostulaciones() async{
+    /**Este método se encarga de obtener todas las solicitudes labores que
+     * el usuario haya enviado
+     */
+
+    myJobsSolicitados.clear();
     isLoading = true;
     notifyListeners();
-    myJobsSolicitados.clear();
     solicitudes.forEach((value) {
         final index = jobs.indexWhere((element) => element.id == value.idEmpleo);
         myJobsSolicitados.add(jobs.elementAt(index));

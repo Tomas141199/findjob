@@ -1,5 +1,6 @@
 import 'package:findjob_app/models/models.dart';
 import 'package:flutter/material.dart';
+import '../screens/jobs_data.dart';
 import '../screens/screens.dart';
 
 class AppRoutes {
@@ -40,6 +41,18 @@ class AppRoutes {
       route: 'agregarOferta',
       name: 'Agregar',
       screen: const AddJobScreen(),
+      icon: Icons.add,
+    ),
+    ScreenOption(
+      route: 'verOferta',
+      name: 'visualizar',
+      screen: const JobsData(),
+      icon: Icons.add,
+    ),
+    ScreenOption(
+      route: 'aspirantes',
+      name: 'verAspirantes',
+      screen: const AspirantesScreen(),
       icon: Icons.add,
     ),
   ];

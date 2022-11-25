@@ -12,6 +12,7 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: AuthBackground(
         child: SingleChildScrollView(
@@ -68,7 +69,8 @@ class _LoginForm extends State<LoginForm> {
   bool visible = false;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {  
+    final jobService = Provider.of<JobsService>(context);    
     final loginForm = Provider.of<LoginFormProvider>(context);
     return Form(
       key: loginForm.formKey,
@@ -136,6 +138,7 @@ class _LoginForm extends State<LoginForm> {
               onPressed: loginForm.isLoading
                   ? null
                   : () async {
+
                       FocusScope.of(context).unfocus();
                       final authService =
                           Provider.of<AuthService>(context, listen: false);
@@ -148,7 +151,10 @@ class _LoginForm extends State<LoginForm> {
                           loginForm.email, loginForm.password);
 
                       if (errorMessage == null) {
+                        await jobService.loadJobs();
+                        await jobService.loadMyJobs();
                         Navigator.pushReplacementNamed(context, 'home');
+
                       } else {
                         NotificationsService.showSnackBar(errorMessage);
                         loginForm.isLoading = false;

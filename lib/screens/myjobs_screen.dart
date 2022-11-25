@@ -28,9 +28,9 @@ class _MyJobsScreen extends State<MyJobsScreen> {
         itemBuilder: (BuildContext context, int index) => GestureDetector(
           onTap: () {
             jobsService.selectedJob = jobsList[index].copy();
-            Navigator.pushNamed(context, 'agregarOferta',arguments: WidgetArguments(edit: true,action: "actualizacion"));
+            Navigator.pushNamed(context, 'agregarOferta',arguments: WidgetArguments(edit: true,action: 1));
           },
-          child: JobCard(job: jobsList[index]),
+          child: JobCardDos(job: jobsList[index]),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -48,7 +48,7 @@ class _MyJobsScreen extends State<MyJobsScreen> {
             town: '',
           );
           print(jobsService.isLoading);
-          Navigator.pushNamed(context, 'agregarOferta',arguments: WidgetArguments(edit: true, action: "publicar"));
+          Navigator.pushNamed(context, 'agregarOferta',arguments: WidgetArguments(edit: true, action:2));
         },
         elevation: 4,
         backgroundColor: AppTheme.primary,
@@ -57,13 +57,5 @@ class _MyJobsScreen extends State<MyJobsScreen> {
     );
   }
 
-  Widget _listaItemMisOfertas() {
-    return SliverList(
-      delegate: SliverChildListDelegate(
-        List.generate(3, (int index) {
-          return WidgetOfertaDos();
-        }),
-      ),
-    );
-  }
+  
 }

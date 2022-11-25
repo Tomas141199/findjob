@@ -35,20 +35,52 @@ class _JobBodyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.primary,
-      body: CustomScrollView(
-        slivers:  <Widget>[
-           SliverAppBarWidget(jobService: jobService),
-           SliverList(
-            delegate: SliverChildListDelegate([
-              Container(
-                decoration: _backgroundScaffold(),
-                child: Padding(  
-                  padding: EdgeInsets.only(top: 30.0, right: 25.0, left: 25.0),
-                  child: _FormJob(),
-                ),              ),
-            ]),
+      body: SingleChildScrollView(
+        
+        child: Container(
+          decoration: _backgroundScaffold(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+            
+                Stack(
+                  children: [
+                    JobImage(
+                      url: jobService.selectedJob.picture,
+                    ),
+                    Positioned(
+                      top: 60,
+                      left: 20,
+                      child: IconButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: const Icon(
+                          Icons.arrow_back_ios_new,
+                          size: 40,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                    top: 60,
+                    right: 20,
+                    child: IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(
+                        Icons.camera_alt_rounded,
+                        size: 40,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  ],
+                ),
+                Padding(
+                  padding:const EdgeInsets.only(top: 30.0, right: 25.0, left: 25.0),
+                  child: const _FormJob(),
+                ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -73,25 +105,17 @@ class _FormJob extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    //Cada accion equivale a una posición de este arreglo
+    List<String> acciones=["Guardar cambios","Publicar oferta"];
+
     final String texto;
     final args = ModalRoute.of(context)!.settings.arguments as WidgetArguments;
     bool modoEdicion = args.edit?false:true;
+    int accion = args.action;
+    print("accion:${accion}");
     
-    
-    if(args.edit){
-      print("Estamos en modo de edición/Publicacion");
 
-      if(args.action=="publicar"){
-        texto="Publicar";
-      }else{
-        texto="Actualizar datos";
-      }
-
-    }else{
-      texto="Postularse";    
-      print("Estamos en modo de visualización");
-    }
-
+    texto=acciones.elementAt((accion-1));
     final jobForm = Provider.of<JobFormProvider>(context);
     final job = jobForm.job;
     final jobService = Provider.of<JobsService>(context);
@@ -268,31 +292,61 @@ class _FormJob extends StatelessWidget {
 
           Padding(
             padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
-            child: MaterialButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-              height: 50.0,
-              onPressed: () async {
 
-                if(texto.compareTo("Postularse")!=0){
+            child:Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children:<Widget>[
+            
+                Visibility(
+                visible: accion!=4, //Si acción es igual a 4 el postulante esta en espera de una respuesta
 
-                    if (!jobForm.isValidForm()) return;
-                    final String? imageUrl = await jobService.uploadImage();
-                    if (imageUrl != null) jobForm.job.picture = imageUrl;
-                    await jobService.saveOrCreateJob(jobForm.job);
+                child:Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                      MaterialButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)
+                        ),
+                        height: 50.0,
 
-                }else{
-                  if (!jobForm.isValidForm()) return;
-                    final String? imageUrl = await jobService.uploadImage();
-                    if (imageUrl != null) jobForm.job.picture = imageUrl;
-                    await jobService.postularseJob(jobForm.job);
-                }
+                      onPressed: () async {
 
-                
-              },
-              color: AppTheme.deepBlue,
-              child:
-                  Text(texto, style: TextStyle(color: Colors.white)),
+                        if (!jobForm.isValidForm()) return;
+                          final String? imageUrl = await jobService.uploadImage();
+                          if (imageUrl != null) jobForm.job.picture = imageUrl;
+                          await jobService.saveOrCreateJob(jobForm.job);
+                        },
+                        color: AppTheme.deepBlue,
+                        child:
+                          Text(texto, style: TextStyle(color: Colors.white)
+                          ),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.only(top:10),
+                  
+                        child: Visibility(
+                          visible: accion==1,
+                          child: MaterialButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)
+                          ),
+                          height: 50.0,
+
+                        onPressed: () async {
+                          Navigator.pushNamed(context, 'aspirantes');
+                        },
+                        color: AppTheme.primary,
+                        child:
+                            Text("Ver postulantes", style: TextStyle(color: Colors.white)),
+                        ),
+                      ),
+                    ), 
+                  ],
+                ),
+
+                ),
+              ],
             ),
           ),
         ],
@@ -307,82 +361,5 @@ class _FormJob extends StatelessWidget {
     );
   }
 
-}
-
-//Sliver bar para la sección de la imagen
-class SliverAppBarWidget extends StatelessWidget{
-
-  const SliverAppBarWidget({
-    Key? key,
-    required this.jobService,
-  }) : super(key: key);
-
-  final JobsService jobService;
-
-
-  @override
-  Widget build(BuildContext context){
-
-    final args = ModalRoute.of(context)!.settings.arguments as WidgetArguments;
-    bool modoEdicion = args.edit;
-
-     return SliverAppBar(
-      backgroundColor: AppTheme.primary,
-      expandedHeight: 470.0,
-      automaticallyImplyLeading: false,
-      flexibleSpace: FlexibleSpaceBar(
-        background: Wrap(
-          children: [
-            Stack(
-                  children: [
-                    JobImage(
-                      url: jobService.selectedJob.picture,
-                    ),
-                    Positioned(
-                      top: 60,
-                      left: 20,
-                      child: IconButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        icon: const Icon(
-                          Icons.arrow_back_ios_new,
-                          size: 40,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    Visibility(
-                      visible: modoEdicion,
-                      child:Positioned(
-                        top: 60,
-                        right: 20,
-                        child: IconButton(
-                          onPressed: () async {
-                            final picker = ImagePicker();
-                            final PickedFile? pickedFile = await picker.getImage(
-                                source: ImageSource.camera, imageQuality: 100);
-
-                            if (pickedFile == null) {
-                              print('no selecciono nada');
-                              return;
-                            }
-                            print('Tenemos imagen ${pickedFile.path}');
-                            jobService
-                                .updateSelectedProductImage(pickedFile.path);
-                          },
-                          icon: const Icon(
-                            Icons.camera_alt_rounded,
-                            size: 40,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
