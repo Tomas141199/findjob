@@ -5,6 +5,8 @@ import 'package:findjob_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'loading_screen.dart';
+
 class MyJobsScreen extends StatefulWidget {
   const MyJobsScreen({Key? key}) : super(key: key);
 
@@ -15,16 +17,25 @@ class MyJobsScreen extends StatefulWidget {
 class _MyJobsScreen extends State<MyJobsScreen> {
   @override
   Widget build(BuildContext context) {
-    final jobService = Provider.of<JobsService>(context);
+
+    final jobsService = Provider.of<JobsService>(context);
+    final jobsList = jobsService.myJobs;
+    if (jobsService.isLoading) return const LoadingScreen();
+
     return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          _listaItemMisOfertas(),
-        ],
+     body: ListView.builder(
+        itemCount: jobsList.length,
+        itemBuilder: (BuildContext context, int index) => GestureDetector(
+          onTap: () {
+            jobsService.selectedJob = jobsList[index].copy();
+            Navigator.pushNamed(context, 'agregarOferta',arguments: WidgetArguments(edit: true,action: "actualizacion"));
+          },
+          child: JobCard(job: jobsList[index]),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          jobService.selectedJob = Job(
+          jobsService.selectedJob = Job(
             address: '',
             author: '',
             city: '',
@@ -36,8 +47,8 @@ class _MyJobsScreen extends State<MyJobsScreen> {
             title: '',
             town: '',
           );
-          print(jobService.isLoading);
-          Navigator.pushNamed(context, 'agregarOferta');
+          print(jobsService.isLoading);
+          Navigator.pushNamed(context, 'agregarOferta',arguments: WidgetArguments(edit: true, action: "publicar"));
         },
         elevation: 4,
         backgroundColor: AppTheme.primary,
