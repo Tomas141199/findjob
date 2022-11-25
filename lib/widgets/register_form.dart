@@ -188,6 +188,7 @@ class _RegisterForm extends State<RegisterForm> {
                       DateFormat('yyyy-MM-dd').format(pickedDate);
                   print(
                       formattedDate); //formatted date output using intl package =>  2021-03-16
+                  registerForm.bth = formattedDate;
                   setState(() {
                     dateInput.text =
                         formattedDate; //set output date to TextField value.
@@ -236,10 +237,16 @@ class _RegisterForm extends State<RegisterForm> {
 
                       registerForm.isLoading = true;
 
+                      print(registerForm.phone);
+                      print(registerForm.bth);
+
                       final String? errorMessage = await authService.createUser(
-                          registerForm.email,
-                          registerForm.password,
-                          registerForm.name);
+                        registerForm.email,
+                        registerForm.password,
+                        registerForm.name,
+                        int.parse(registerForm.phone),
+                        registerForm.bth,
+                      );
 
                       if (errorMessage == null) {
                         Navigator.pushReplacementNamed(context, 'home');
