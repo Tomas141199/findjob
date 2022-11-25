@@ -29,7 +29,7 @@ class _MisSolicitudesScreen extends State<MisSolicitudesScreen>{
         itemBuilder: (BuildContext context, int index) => GestureDetector(
           onTap: () {
             jobsService.selectedJob = jobsList[index].copy();
-            Navigator.pushNamed(context, 'agregarOferta',arguments: WidgetArguments(edit: true,action: "actualizacion"));
+            Navigator.pushNamed(context, 'verOferta',arguments: WidgetArguments(edit: false,action:2));
           },
           child: JobCard(job: jobsList[index]),
         ),

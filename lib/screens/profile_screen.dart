@@ -13,12 +13,15 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreen extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
+
+    
     const String userName = "Nombre del usuario";
     const String userObjetives =
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse diam nisl, lobortis non tortor vel, mattis volutpat purus. Etiam tempor, nibh sit amet pulvinar volutpat, justo tortor iaculis dolor, et ultrices massa enim ut ante. Quisque facilisis, nulla at ultrices pretium, arcu ante vehicula orci, ";
     const String userEmail = "example@outlock.com";
     const String userPhone = "xxx-xxx-9999";
     return SafeArea(
+
       child: Scaffold(
         backgroundColor: AppTheme.primary,
         body: Container(
@@ -27,6 +30,7 @@ class _ProfileScreen extends State<ProfileScreen> {
           child: SingleChildScrollView(
             padding: const EdgeInsets.only(left: 20.0, right: 20.0),
             child: Column(
+              
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Container(

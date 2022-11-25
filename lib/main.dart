@@ -6,11 +6,11 @@ import 'package:findjob_app/services/services.dart';
 import 'package:findjob_app/theme/app_theme.dart';
 
 void main() {
-  runApp(const AppState());
+  runApp( AppState());
 }
 
 class AppState extends StatelessWidget {
-  const AppState({super.key});
+   AppState({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -11,3 +11,4 @@ export 'package:findjob_app/screens/checking_screen.dart';
 export 'package:findjob_app/screens/login_screen.dart';
 export 'package:findjob_app/screens/register_screen.dart';
 export 'package:findjob_app/screens/addjob_screen.dart';
+export 'package:findjob_app/screens/aspirantes_screen.dart';
