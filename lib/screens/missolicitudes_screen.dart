@@ -31,7 +31,7 @@ class _MisSolicitudesScreen extends State<MisSolicitudesScreen>{
             jobsService.selectedJob = jobsList[index].copy();
             Navigator.pushNamed(context, 'verOferta',arguments: WidgetArguments(edit: false,action:2));
           },
-          child: JobCard(job: jobsList[index]),
+          child: JobCardTres(job: jobsList[index]),
         ),
       ),
     );

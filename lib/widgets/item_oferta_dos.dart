@@ -1,8 +1,12 @@
+import 'package:findjob_app/models/job.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../theme/app_theme.dart';
 
-class WidgetOfertaDos extends StatelessWidget{
+class JobCardDos extends StatelessWidget{
+  final Job job;
+  const JobCardDos({super.key, required this.job});
 
   @override
   Widget build(BuildContext context){
@@ -10,35 +14,88 @@ class WidgetOfertaDos extends StatelessWidget{
     String puesto="Nombre del trabajo";
     String fecha="12/12/2022";
     String salario="0.0";
-    return Card(
 
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-    margin: EdgeInsets.only(right:10,left: 10,top: 5,bottom:5),
-    elevation: 1,
+    return Container(
 
-    child: Column(
-      children: <Widget>[
+      color: Colors.white,
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _CardTopBar(
+            establishment: job.establishment,
+            published: job.publishedAt,
+            author: job.author,
+          ),
+        ],
+      ),
+    );
+  }
+}
 
-        ListTile(
-          contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-          title: Text('$puesto',style: AppTheme.subEncabezadoDos),
-          subtitle: Text(
-              'Publicado- $fecha',style: AppTheme.datos,),
-          leading:Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Icon(Icons.work, color: Colors.blueGrey,size: 32.0,),
+class _CardTopBar extends StatelessWidget {
+  final String establishment;
+  final String published;
+  final String author;
+
+  const _CardTopBar({
+    Key? key,
+    required this.establishment,
+    required this.published,
+    required this.author,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      margin: const EdgeInsets.only(bottom: 10, top: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          CircleAvatar(
+            backgroundColor: AppTheme.getRandomColor(),
+            child: Text(
+              establishment[0],
+              style: const TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.w500),
+            ),
+          ),
+          
+          Expanded(
+            child:Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children:<Widget>[
+              Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    establishment,
+                    style: const TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    "${DateFormat('yMd').format(DateTime.parse(published))} - $author",
+                    style: TextStyle(color: Colors.grey.shade500),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
-          trailing:  Icon(Icons.more_vert, color: Colors.blueGrey,size: 32.0,),
-          
-          //Icon(Icons.monetization_on)
-          //Text('$salario')
-        ),
-        
-      ],
-    ),
+          ),
 
+          IconButton(
+            onPressed: (){
+              print("Mostrar menu de opciones");
+            }, 
+            icon:Icon(Icons.more_vert),
+          ),
+        ],
+      ),
     );
   }
 }

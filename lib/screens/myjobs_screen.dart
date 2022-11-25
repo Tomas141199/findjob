@@ -30,7 +30,7 @@ class _MyJobsScreen extends State<MyJobsScreen> {
             jobsService.selectedJob = jobsList[index].copy();
             Navigator.pushNamed(context, 'agregarOferta',arguments: WidgetArguments(edit: true,action: 1));
           },
-          child: JobCard(job: jobsList[index]),
+          child: JobCardDos(job: jobsList[index]),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -57,13 +57,5 @@ class _MyJobsScreen extends State<MyJobsScreen> {
     );
   }
 
-  Widget _listaItemMisOfertas() {
-    return SliverList(
-      delegate: SliverChildListDelegate(
-        List.generate(3, (int index) {
-          return WidgetOfertaDos();
-        }),
-      ),
-    );
-  }
+  
 }
