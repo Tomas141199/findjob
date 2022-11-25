@@ -4,6 +4,8 @@ import 'package:findjob_app/screens/screens.dart';
 import 'package:findjob_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
+import '../models/widget_arguments.dart';
+
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
 
@@ -26,7 +28,8 @@ class _SearchScreen extends State<SearchScreen> {
         itemBuilder: (BuildContext context, int index) => GestureDetector(
           onTap: () {
             jobsService.selectedJob = jobsList[index].copy();
-            Navigator.pushNamed(context, 'agregarOferta');
+            Navigator.pushNamed(context, 'agregarOferta',
+            arguments: WidgetArguments(edit: false, action: "postularse"));
           },
           child: JobCard(job: jobsList[index]),
         ),

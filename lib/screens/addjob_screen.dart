@@ -1,3 +1,4 @@
+import 'package:findjob_app/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,8 @@ class AddJobScreen extends StatelessWidget {
     final jobService = Provider.of<JobsService>(context);
     return ChangeNotifierProvider(
       create: (_) => JobFormProvider(jobService.selectedJob),
-      child: _JobBodyScreen(jobService: jobService),
+      child:_JobBodyScreen(jobService: jobService),
+      
     );
   }
 }
@@ -33,61 +35,20 @@ class _JobBodyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.primary,
-      body: SingleChildScrollView(
-        child: Container(
-          decoration: _backgroundScaffold(),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Stack(
-                  children: [
-                    JobImage(
-                      url: jobService.selectedJob.picture,
-                    ),
-                    Positioned(
-                      top: 60,
-                      left: 20,
-                      child: IconButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        icon: const Icon(
-                          Icons.arrow_back_ios_new,
-                          size: 40,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 60,
-                      right: 20,
-                      child: IconButton(
-                        onPressed: () async {
-                          final picker = ImagePicker();
-                          final PickedFile? pickedFile = await picker.getImage(
-                              source: ImageSource.camera, imageQuality: 100);
-
-                          if (pickedFile == null) {
-                            print('no selecciono nada');
-                            return;
-                          }
-                          print('Tenemos imagen ${pickedFile.path}');
-                          jobService
-                              .updateSelectedProductImage(pickedFile.path);
-                        },
-                        icon: const Icon(
-                          Icons.camera_alt_rounded,
-                          size: 40,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const Padding(
+      body: CustomScrollView(
+        slivers:  <Widget>[
+           SliverAppBarWidget(jobService: jobService),
+           SliverList(
+            delegate: SliverChildListDelegate([
+              Container(
+                decoration: _backgroundScaffold(),
+                child: Padding(  
                   padding: EdgeInsets.only(top: 30.0, right: 25.0, left: 25.0),
                   child: _FormJob(),
-                ),
-              ]),
-        ),
+                ),              ),
+            ]),
+          ),
+        ],
       ),
     );
   }
@@ -104,12 +65,33 @@ class _JobBodyScreen extends StatelessWidget {
 }
 
 class _FormJob extends StatelessWidget {
+
   const _FormJob({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    final String texto;
+    final args = ModalRoute.of(context)!.settings.arguments as WidgetArguments;
+    bool modoEdicion = args.edit?false:true;
+    
+    
+    if(args.edit){
+      print("Estamos en modo de edición/Publicacion");
+
+      if(args.action=="publicar"){
+        texto="Publicar";
+      }else{
+        texto="Actualizar datos";
+      }
+
+    }else{
+      texto="Postularse";    
+      print("Estamos en modo de visualización");
+    }
+
     final jobForm = Provider.of<JobFormProvider>(context);
     final job = jobForm.job;
     final jobService = Provider.of<JobsService>(context);
@@ -131,6 +113,7 @@ class _FormJob extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: TextFormField(
+              readOnly: modoEdicion,
               style: _getTextStyleForm(),
               //Decoración del elemento
               decoration: const InputDecoration(
@@ -149,6 +132,7 @@ class _FormJob extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: TextFormField(
+              readOnly: modoEdicion,
               style: _getTextStyleForm(),
               //Decoración del input
               decoration: const InputDecoration(
@@ -167,6 +151,7 @@ class _FormJob extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: TextFormField(
+              readOnly: modoEdicion,
               keyboardType: TextInputType.number,
               style: _getTextStyleForm(),
               //Decoración del textFormField
@@ -196,6 +181,7 @@ class _FormJob extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: TextFormField(
+              readOnly: modoEdicion,
               maxLines: 4, //or null
               style: _getTextStyleForm(),
               //Decoración del textFormField
@@ -224,6 +210,7 @@ class _FormJob extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: TextFormField(
+              readOnly: modoEdicion,
               style: _getTextStyleForm(),
 
               //Decoración del textFormField
@@ -243,6 +230,7 @@ class _FormJob extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: TextFormField(
+              readOnly: modoEdicion,
               style: _getTextStyleForm(),
 
               //Decoración del textFormField
@@ -262,6 +250,7 @@ class _FormJob extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 20.0),
             child: TextFormField(
+              readOnly: modoEdicion,
               style: _getTextStyleForm(),
               //Decoración del textFormField
               decoration: const InputDecoration(
@@ -284,16 +273,26 @@ class _FormJob extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8)),
               height: 50.0,
               onPressed: () async {
-                if (!jobForm.isValidForm()) return;
-                final String? imageUrl = await jobService.uploadImage();
 
-                if (imageUrl != null) jobForm.job.picture = imageUrl;
+                if(texto.compareTo("Postularse")!=0){
 
-                await jobService.saveOrCreateJob(jobForm.job);
+                    if (!jobForm.isValidForm()) return;
+                    final String? imageUrl = await jobService.uploadImage();
+                    if (imageUrl != null) jobForm.job.picture = imageUrl;
+                    await jobService.saveOrCreateJob(jobForm.job);
+
+                }else{
+                  if (!jobForm.isValidForm()) return;
+                    final String? imageUrl = await jobService.uploadImage();
+                    if (imageUrl != null) jobForm.job.picture = imageUrl;
+                    await jobService.postularseJob(jobForm.job);
+                }
+
+                
               },
               color: AppTheme.deepBlue,
               child:
-                  const Text('Publicar', style: TextStyle(color: Colors.white)),
+                  Text(texto, style: TextStyle(color: Colors.white)),
             ),
           ),
         ],
@@ -307,4 +306,83 @@ class _FormJob extends StatelessWidget {
       color: Colors.black,
     );
   }
+
 }
+
+//Sliver bar para la sección de la imagen
+class SliverAppBarWidget extends StatelessWidget{
+
+  const SliverAppBarWidget({
+    Key? key,
+    required this.jobService,
+  }) : super(key: key);
+
+  final JobsService jobService;
+
+
+  @override
+  Widget build(BuildContext context){
+
+    final args = ModalRoute.of(context)!.settings.arguments as WidgetArguments;
+    bool modoEdicion = args.edit;
+
+     return SliverAppBar(
+      backgroundColor: AppTheme.primary,
+      expandedHeight: 470.0,
+      automaticallyImplyLeading: false,
+      flexibleSpace: FlexibleSpaceBar(
+        background: Wrap(
+          children: [
+            Stack(
+                  children: [
+                    JobImage(
+                      url: jobService.selectedJob.picture,
+                    ),
+                    Positioned(
+                      top: 60,
+                      left: 20,
+                      child: IconButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: const Icon(
+                          Icons.arrow_back_ios_new,
+                          size: 40,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: modoEdicion,
+                      child:Positioned(
+                        top: 60,
+                        right: 20,
+                        child: IconButton(
+                          onPressed: () async {
+                            final picker = ImagePicker();
+                            final PickedFile? pickedFile = await picker.getImage(
+                                source: ImageSource.camera, imageQuality: 100);
+
+                            if (pickedFile == null) {
+                              print('no selecciono nada');
+                              return;
+                            }
+                            print('Tenemos imagen ${pickedFile.path}');
+                            jobService
+                                .updateSelectedProductImage(pickedFile.path);
+                          },
+                          icon: const Icon(
+                            Icons.camera_alt_rounded,
+                            size: 40,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
