@@ -1,5 +1,10 @@
 import 'package:findjob_app/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../services/jobs_service.dart';
+import '../widgets/postulantes.dart';
+import 'loading_screen.dart';
 
 
 class AspirantesScreen extends StatelessWidget {
@@ -7,6 +12,10 @@ class AspirantesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final jobsService = Provider.of<JobsService>(context);
+    final jobsList = jobsService.aspirantes;
+    if (jobsService.isLoading) return const LoadingScreen();
+
     return Scaffold(
       backgroundColor: AppTheme.primary,
       appBar: AppBar(
@@ -30,7 +39,15 @@ class AspirantesScreen extends StatelessWidget {
             topRight: Radius.circular(10),
           ),
         ),
-        
+        child: ListView.builder(
+        itemCount: jobsList.length,
+        itemBuilder: (BuildContext context, int index) => GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, 'agregarOferta');
+          },
+          child: PostulanteWidget(jobSolicitud: jobsList[index]),
+        ),
+      ),
       ),
     );
   }

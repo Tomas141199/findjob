@@ -299,9 +299,6 @@ class _DataJob extends StatelessWidget {
                         
                     ],
                   ),
-                  
-                 
-
                 ),
               ],
             ),

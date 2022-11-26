@@ -1,7 +1,9 @@
 import 'package:findjob_app/models/job.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
+import '../services/jobs_service.dart';
 import '../theme/app_theme.dart';
 
 class JobCardDos extends StatelessWidget{
@@ -11,9 +13,6 @@ class JobCardDos extends StatelessWidget{
   @override
   Widget build(BuildContext context){
 
-    String puesto="Nombre del trabajo";
-    String fecha="12/12/2022";
-    String salario="0.0";
 
     return Container(
 
@@ -23,6 +22,7 @@ class JobCardDos extends StatelessWidget{
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _CardTopBar(
+            idJob:job.id!,
             establishment: job.establishment,
             published: job.publishedAt,
             author: job.author,
@@ -37,9 +37,11 @@ class _CardTopBar extends StatelessWidget {
   final String establishment;
   final String published;
   final String author;
+  final String idJob;
 
   const _CardTopBar({
     Key? key,
+    required this.idJob,
     required this.establishment,
     required this.published,
     required this.author,
@@ -47,6 +49,7 @@ class _CardTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final jobService = Provider.of<JobsService>(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       margin: const EdgeInsets.only(bottom: 10, top: 20),
@@ -78,7 +81,7 @@ class _CardTopBar extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    "${DateFormat('yMd').format(DateTime.parse(published))} - $author",
+                    "Oferta publicada el- ${DateFormat('yMd').format(DateTime.parse(published))}",
                     style: TextStyle(color: Colors.grey.shade500),
                     ),
                   ],
@@ -89,8 +92,46 @@ class _CardTopBar extends StatelessWidget {
           ),
 
           IconButton(
-            onPressed: (){
-              print("Mostrar menu de opciones");
+            onPressed: (){            
+                showModalBottomSheet(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    context: context,
+                    builder: (context) {
+                      return Wrap(
+                        children: <Widget>[
+                          Padding(padding: EdgeInsets.only(top: 10,left: 5,right: 5),
+                          child: ListTile(
+                            leading: Icon(Icons.group),
+                            title: Text('Ver postulantes'),
+                            onTap: () async {
+                              await jobService.loadPostulantes(idJob);
+                              Navigator.pushNamed(context, 'aspirantes');
+                            },
+                          ),
+                        ),
+                  
+                        Padding(padding: EdgeInsets.only(bottom:10,left: 5,right: 5),
+                          child: ListTile(
+                            leading: Icon(Icons.delete),
+                            title: Text('Eliminar publicación'),
+                            onTap: () async {
+                              await jobService.eliminarJobs(idJob);
+                              await jobService.eliminarSolicitudes(idJob);
+                              await jobService.eliminarPostulaciones(idJob);
+
+                              //Actualizamos los arreglos
+                              await jobService.loadJobs();
+                              await jobService.loadMyJobs();
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+                  },        
+                );
+              //bpp,
             }, 
             icon:Icon(Icons.more_vert),
           ),
