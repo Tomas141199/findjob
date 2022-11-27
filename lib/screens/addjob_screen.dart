@@ -334,6 +334,7 @@ class _FormJob extends StatelessWidget {
                           height: 50.0,
 
                         onPressed: () async {
+                          await jobService.loadPostulantes(job.id);
                           Navigator.pushNamed(context, 'aspirantes');
                         },
                         color: AppTheme.primary,
