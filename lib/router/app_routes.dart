@@ -20,6 +20,12 @@ class AppRoutes {
       icon: Icons.home,
     ),
     ScreenOption(
+      route: 'userProfile',
+      name: 'Profile',
+      screen: const UserProfileScreen(),
+      icon: Icons.home,
+    ),
+    ScreenOption(
       route: 'registro',
       name: 'Registro',
       screen: const RegisterScreen(),

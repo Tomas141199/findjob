@@ -17,8 +17,7 @@ class AddJobScreen extends StatelessWidget {
     final jobService = Provider.of<JobsService>(context);
     return ChangeNotifierProvider(
       create: (_) => JobFormProvider(jobService.selectedJob),
-      child:_JobBodyScreen(jobService: jobService),
-      
+      child: _JobBodyScreen(jobService: jobService),
     );
   }
 }
@@ -36,35 +35,41 @@ class _JobBodyScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppTheme.primary,
       body: SingleChildScrollView(
-        
         child: Container(
           decoration: _backgroundScaffold(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-            
-                Stack(
-                  children: [
-                    JobImage(
-                      url: jobService.selectedJob.picture,
-                    ),
-                    Positioned(
-                      top: 60,
-                      left: 20,
-                      child: IconButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        icon: const Icon(
-                          Icons.arrow_back_ios_new,
-                          size: 40,
-                          color: Colors.white,
-                        ),
+              Stack(
+                children: [
+                  JobImage(
+                    url: jobService.selectedJob.picture,
+                  ),
+                  Positioned(
+                    top: 60,
+                    left: 20,
+                    child: IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(
+                        Icons.arrow_back_ios_new,
+                        size: 40,
+                        color: Colors.white,
                       ),
                     ),
-                    Positioned(
+                  ),
+                  Positioned(
                     top: 60,
                     right: 20,
                     child: IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
+                      onPressed: () async {
+                        final picker = ImagePicker();
+                        final PickedFile? pickedFile = await picker.getImage(
+                            source: ImageSource.camera, imageQuality: 100);
+                        if (pickedFile == null) {
+                          return;
+                        }
+                        jobService.updateSelectedProductImage(pickedFile.path);
+                      },
                       icon: const Icon(
                         Icons.camera_alt_rounded,
                         size: 40,
@@ -72,12 +77,12 @@ class _JobBodyScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  ],
-                ),
-                Padding(
-                  padding:const EdgeInsets.only(top: 30.0, right: 25.0, left: 25.0),
-                  child: const _FormJob(),
-                ),
+                ],
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 30.0, right: 25.0, left: 25.0),
+                child: _FormJob(),
+              ),
             ],
           ),
         ),
@@ -97,28 +102,26 @@ class _JobBodyScreen extends StatelessWidget {
 }
 
 class _FormJob extends StatelessWidget {
-
   const _FormJob({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     //Cada accion equivale a una posición de este arreglo
     List<String> acciones=["Guardar cambios","Publicar oferta"];
     List<String> mensajes=[
     "Los datos de la oferta se modificaran para todos los usuarios. ¿Desea continuar?",
     "La oferta se publicara con la información brindada. ¿Desea continuar?"];
 
+
     final String texto;
     final args = ModalRoute.of(context)!.settings.arguments as WidgetArguments;
-    bool modoEdicion = args.edit?false:true;
+    bool modoEdicion = args.edit ? false : true;
     int accion = args.action;
     print("accion:${accion}");
-    
 
-    texto=acciones.elementAt((accion-1));
+    texto = acciones.elementAt((accion - 1));
     final jobForm = Provider.of<JobFormProvider>(context);
     final job = jobForm.job;
     final jobService = Provider.of<JobsService>(context);
@@ -295,18 +298,17 @@ class _FormJob extends StatelessWidget {
 
           Padding(
             padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
-
-            child:Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children:<Widget>[
             
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
+
                       MaterialButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)
-                        ),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
                         height: 50.0,
 
                       onPressed: () async {
@@ -338,34 +340,30 @@ class _FormJob extends StatelessWidget {
                         },
                         color: AppTheme.deepBlue,
                         child:
-                          Text(texto, style: TextStyle(color: Colors.white)
-                          ),
+                            Text(texto, style: TextStyle(color: Colors.white)),
                       ),
-
                       Padding(
-                        padding: EdgeInsets.only(top:10),
-                  
+                        padding: EdgeInsets.only(top: 10),
                         child: Visibility(
-                          visible: accion==1,
+                          visible: accion == 1,
                           child: MaterialButton(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            height: 50.0,
+                            onPressed: () async {
+                              await jobService.loadPostulantes(job.id);
+                              Navigator.pushNamed(context, 'aspirantes');
+                            },
+                            color: AppTheme.primary,
+                            child: Text("Ver postulantes",
+                                style: TextStyle(color: Colors.white)),
                           ),
-                          height: 50.0,
-
-                        onPressed: () async {
-                          await jobService.loadPostulantes(job.id);
-                          Navigator.pushNamed(context, 'aspirantes');
-                        },
-                        color: AppTheme.primary,
-                        child:
-                            Text("Ver postulantes", style: TextStyle(color: Colors.white)),
                         ),
                       ),
+
                     ), 
                   ],
                 ),
-
               ],
             ),
           ),
@@ -380,6 +378,7 @@ class _FormJob extends StatelessWidget {
       color: Colors.black,
     );
   }
+
 
   
   Widget _cancelButton(BuildContext context){
@@ -407,4 +406,3 @@ class _FormJob extends StatelessWidget {
     );
   }
 }
-

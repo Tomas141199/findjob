@@ -1,24 +1,25 @@
-// To parse this JSON data, do
-//
-//     final userData = userDataFromMap(jsonString);
-
 import 'dart:convert';
 
 class UserData {
   UserData({
-    this.id,
     required this.birthday,
+    required this.contactEmail,
     this.description,
-    this.doc,
+    required this.displayName,
+    this.docUrl,
     required this.ownerId,
+    this.photoUrl,
     required this.tel,
   });
 
   String? id;
   String birthday;
+  String contactEmail;
   String? description;
-  String? doc;
+  String displayName;
+  String? docUrl;
   String ownerId;
+  String? photoUrl;
   int tel;
 
   factory UserData.fromJson(String str) => UserData.fromMap(json.decode(str));
@@ -27,17 +28,23 @@ class UserData {
 
   factory UserData.fromMap(Map<String, dynamic> json) => UserData(
         birthday: json["birthday"],
+        contactEmail: json["contactEmail"],
         description: json["description"],
-        doc: json["doc"],
+        displayName: json["displayName"],
+        docUrl: json["docUrl"],
         ownerId: json["owner_id"],
+        photoUrl: json["photoUrl"],
         tel: json["tel"],
       );
 
   Map<String, dynamic> toMap() => {
         "birthday": birthday,
+        "contactEmail": contactEmail,
         "description": description,
-        "doc": doc,
+        "displayName": displayName,
+        "docUrl": docUrl,
         "owner_id": ownerId,
+        "photoUrl": photoUrl,
         "tel": tel,
       };
 }

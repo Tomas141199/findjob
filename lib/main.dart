@@ -6,11 +6,11 @@ import 'package:findjob_app/services/services.dart';
 import 'package:findjob_app/theme/app_theme.dart';
 
 void main() {
-  runApp( AppState());
+  runApp(AppState());
 }
 
 class AppState extends StatelessWidget {
-   AppState({super.key});
+  AppState({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +19,7 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => UiProvider()),
         ChangeNotifierProvider(create: (_) => JobsService()),
+        ChangeNotifierProvider(create: (_) => UserDataService()),
       ],
       child: const MyApp(),
     );
