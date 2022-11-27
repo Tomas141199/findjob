@@ -109,7 +109,11 @@ class _FormJob extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //Cada accion equivale a una posición de este arreglo
-    List<String> acciones = ["Guardar cambios", "Publicar oferta"];
+    List<String> acciones=["Guardar cambios","Publicar oferta"];
+    List<String> mensajes=[
+    "Los datos de la oferta se modificaran para todos los usuarios. ¿Desea continuar?",
+    "La oferta se publicara con la información brindada. ¿Desea continuar?"];
+
 
     final String texto;
     final args = ModalRoute.of(context)!.settings.arguments as WidgetArguments;
@@ -296,24 +300,43 @@ class _FormJob extends StatelessWidget {
             padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Visibility(
-                  visible: accion !=
-                      4, //Si acción es igual a 4 el postulante esta en espera de una respuesta
+              children:<Widget>[
+            
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
 
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
                       MaterialButton(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8)),
                         height: 50.0,
-                        onPressed: () async {
-                          if (!jobForm.isValidForm()) return;
-                          final String? imageUrl =
-                              await jobService.uploadImage();
-                          if (imageUrl != null) jobForm.job.picture = imageUrl;
-                          await jobService.saveOrCreateJob(jobForm.job);
+
+                      onPressed: () async {
+                        //Esta acción corresponde a agregar un empleo o editar un empleo
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("Aviso"),
+                              content: Text(mensajes.elementAt(accion-1)),
+                                actions: [
+                                  _cancelButton(context),
+                                  TextButton(
+                                    style: AppTheme.flatButtonStyle,
+                                    child: Text("Continuar"),
+                                    onPressed:  () async{     
+                                      if (!jobForm.isValidForm()) return;
+                                      final String? imageUrl = await jobService.uploadImage();
+                                      if (imageUrl != null) jobForm.job.picture = imageUrl;
+                                      await jobService.saveOrCreateJob(jobForm.job);
+                                      Navigator.of(context).pop();
+                                      alerta(context,accion);
+                                    },  
+                                  ),
+                               ],
+                              );
+                            },
+                          );
                         },
                         color: AppTheme.deepBlue,
                         child:
@@ -337,8 +360,9 @@ class _FormJob extends StatelessWidget {
                           ),
                         ),
                       ),
-                    ],
-                  ),
+
+                    ), 
+                  ],
                 ),
               ],
             ),
@@ -352,6 +376,33 @@ class _FormJob extends StatelessWidget {
     return const TextStyle(
       fontSize: 14.0,
       color: Colors.black,
+    );
+  }
+
+
+  
+  Widget _cancelButton(BuildContext context){
+    return TextButton(
+      style: AppTheme.flatButtonStyle,
+      child: Text("Cancelar"),
+      onPressed:  () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  void alerta(BuildContext context, var accion) {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        content:  Text(accion==2?'La oferta laboral se ha publicado y esta disponible para todos los usuarios.':'Los datos de la oferta laboral se han modificado para todos los usuarios.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Aceptar'),
+          ),
+        ],
+      )
     );
   }
 }

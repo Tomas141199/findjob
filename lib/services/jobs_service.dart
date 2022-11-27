@@ -116,6 +116,7 @@ class JobsService extends ChangeNotifier {
     job.publishedAt = DateTime.now().toString();
 
     final url = Uri.https(_baseUrl, 'jobs.json');
+    
     final resp = await http.post(url, body: job.toJson());
     final decodeData = json.decode(resp.body);
 
@@ -163,7 +164,9 @@ class JobsService extends ChangeNotifier {
   }
 
   //Solicitude de postulación
-  Future<String> postularseJob(Job job) async {
+
+  Future<bool> postularseJob(Job job) async {
+    
     //Id del usuario logueado
     var nombreSolicitante = await storage.read(key: "user_name") ?? '';
     var idUserLogueado = await storage.read(key: "user_id") ?? '';
@@ -181,17 +184,24 @@ class JobsService extends ChangeNotifier {
         nombreEmpleador: nombreEmpleador,
         solicitadoAt: DateTime.now().toString());
 
-    final url = Uri.https(_baseUrl, 'postulaciones/${idUserLogueado}.json');
-    final resp = await http.post(url, body: jobSolicitud.toJson());
-    final decodeData = json.decode(resp.body);
+    try{
+      final url = Uri.https(_baseUrl, 'postulaciones/${idUserLogueado}.json');
+      final resp = await http.post(url, body: jobSolicitud.toJson());
+      final decodeData = json.decode(resp.body);
+      jobSolicitud.id = decodeData['name'];
+      solicitudes.add(jobSolicitud);
 
-    jobSolicitud.id = decodeData['name'];
+      //Si un usuario se postula actualizamos su lista de postulaciones
+      //cargarMisPostulaciones();
+      final index = jobs.indexWhere((element) => element.id == jobSolicitud.idEmpleo);
+      myJobsSolicitados.add(jobs.elementAt(index));
+      print("Postulación exitosa");
+      return true;
+    }catch(e){
+      print("Ha ocurrido un error");
+      return false;
+    }
 
-    solicitudes.add(jobSolicitud);
-
-    //Si un usuario se postula actualizamos su lista de postulaciones
-    cargarMisPostulaciones();
-    return jobSolicitud.id!;
   }
 
   Future<String> agregarAspiranteJob(Job job) async {
@@ -248,7 +258,8 @@ class JobsService extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
 
-    if (solicitudes.length >= 0) {
+    if(solicitudes.length>0){
+
       print("Hay postulaciones disponibles");
       //Significa que hay postulaciones
       cargarMisPostulaciones();
@@ -263,7 +274,6 @@ class JobsService extends ChangeNotifier {
     /**Este método se encarga de obtener todas las solicitudes labores que
      * el usuario haya enviado
      */
-
     myJobsSolicitados.clear();
     isLoading = true;
     notifyListeners();
@@ -280,7 +290,7 @@ class JobsService extends ChangeNotifier {
   //Sección donde obtendremos los datos de los aspirantes
   //Esto de acuerdo al empleo del que se desee conocer dichos datos
 
-  Future<List<JobSolicitud>> loadPostulantes(var idEmpleo) async {
+  Future<bool> loadPostulantes(var idEmpleo) async {
     /**Este método se encarga de verificar si el empleo 
      * cuenta con postulantes en espera de una respuesta */
 
@@ -291,9 +301,9 @@ class JobsService extends ChangeNotifier {
     var idUserLogueado = await storage.read(key: "user_id") ?? '';
     final url = Uri.https(_baseUrl, 'solicitudes/${idEmpleo}.json');
     final resp = await http.get(url);
-    print("Hola");
-    try {
-      final Map<String, dynamic> jobsMap = json.decode(resp.body) ?? {};
+    
+    try{
+      final Map<String, dynamic> jobsMap = json.decode(resp.body);
       print("jobsMap ${jobsMap}");
       print(jobsMap.length);
       jobsMap.forEach((key, value) {
@@ -302,15 +312,18 @@ class JobsService extends ChangeNotifier {
         aspirantes.add(tempJobSolicitud);
       });
       print("Se han encontrado postulantes");
-    } catch (e) {
+
+    }catch(e){
       print("Error $e");
       print("No se han encontrado postulantes");
-    }
 
+    }
     isLoading = false;
     notifyListeners();
 
-    return aspirantes;
+    return aspirantes.length==0? false: true;
+    
+    
   }
 
   /*Proceso de eliminacion de las colecciones de trabajo
@@ -321,25 +334,39 @@ class JobsService extends ChangeNotifier {
   Future<void> eliminarJobs(var idEmpleo) async {
     /**Este método se encarga de verificar si el empleo 
      * cuenta con postulantes en espera de una respuesta */
-
     aspirantes.clear();
+
     isLoading = true;
     notifyListeners();
 
     var idUserLogueado = await storage.read(key: "user_id") ?? '';
     final url = Uri.https(_baseUrl, 'jobs/${idEmpleo}.json');
-    return await http.delete(url).then((response) {
+    return http.delete(url).then((response) {
+      
       print(response.statusCode);
       print(response.body);
+
       if (response.statusCode >= 400) {
         throw HttpException("Ha ocurrido un error durante la eliminación");
       } else {
         print("Elemento eliminado exitosamente de la seccion de jobs");
+
+        //Eliminamos el elemento de mis arreglos
+        jobs.removeAt(jobs.indexWhere((element) => element.id == idEmpleo));
+        myJobs.removeAt(myJobs.indexWhere((element) => element.id == idEmpleo));
+        //Si el elemento se elimina procedemos a eliminarlo de las demas colecciones
+        eliminarSolicitudes(idEmpleo);
+        eliminarPostulaciones(idEmpleo);
         //Si el elemento se borra procedemos a eliminarlo de las solicitudes
       }
+      
+      isLoading = false;
+      notifyListeners();
+    }).catchError((onError){
 
       isLoading = false;
       notifyListeners();
+      print("Ha ocurrido un error durante la eliminación de la oferta laboral \nError: $onError");
     });
   }
 
@@ -459,39 +486,32 @@ class JobsService extends ChangeNotifier {
       final resp = await http.get(url);
       final Map<String, dynamic> jobsMap = json.decode(resp.body);
 
-      jobsMap.forEach((key, value) {
-        final tempJob = JobSolicitud.fromMap(value);
-        tempJob.id = key;
+            //Eliminamos el elemento de las solicitudes
+            final urlDos = Uri.https(_baseUrl, 'solicitudes/$idEmpleo/$key.json');
+            http.delete(urlDos).then((response){
+              print(response.statusCode);
+              print(response.body);
+              if (response.statusCode >= 400) {
+                throw HttpException("Ha ocurrido un error durante la eliminación de solicitudes");
+              }else{
+               
+                solicitudes.removeAt(solicitudes.indexWhere((element) => element.idEmpleo == idEmpleo));
+                myJobsSolicitados.removeAt(myJobsSolicitados.indexWhere((element) => element.id == idEmpleo));
+                //Eliminamos el elemento de aspirantes postulados
+                eliminarPostulacionesAspirante(idEmpleo);
 
-        if (tempJob.idSolicitante == idUser) {
-          print("Elemento encontrado en elminar solicitudes");
-
-          //Eliminamos el elemento de las solicitudes
-          final urlDos = Uri.https(_baseUrl, 'solicitudes/$idEmpleo/$key.json');
-          http.delete(urlDos).then((response) {
-            print(response.statusCode);
-            print(response.body);
-            if (response.statusCode >= 400) {
-              throw HttpException(
-                  "Ha ocurrido un error durante la eliminación de solicitudes");
-            } else {
-              loadSolicitudes();
-              print(
-                  "Elemento eliminado exitosamente de la seccion de solicitudes desde aspirantes");
-              //Concluimos la busqueda
-              isLoading = false;
-              notifyListeners();
-
-              return;
-              //Si el elemento se borra procedemos a eliminarlo de las solicitudes
-            }
-          });
-        }
-      });
-    } catch (e) {
-      print("Error en la sección de postulaciones");
-    }
-    isLoading = false;
-    notifyListeners();
+                //Eliminamos la solicitud de nuestro arreglo
+                print("Elemento eliminado exitosamente de la seccion de solicitudes desde aspirantes");
+                isLoading=false;
+                notifyListeners();                  
+              }
+            });
+          }
+        });
+      }catch(e){
+        print("Error en la sección de postulaciones");
+        isLoading=false;
+        notifyListeners();  
+      }
   }
 }

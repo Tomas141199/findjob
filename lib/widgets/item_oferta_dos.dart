@@ -44,6 +44,8 @@ class _CardTopBar extends StatelessWidget {
     required this.author,
   }) : super(key: key);
 
+  
+
   @override
   Widget build(BuildContext context) {
     final jobService = Provider.of<JobsService>(context);
@@ -87,40 +89,60 @@ class _CardTopBar extends StatelessWidget {
             ),
           ),
           IconButton(
-            onPressed: () {
-              showModalBottomSheet(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                context: context,
-                builder: (context) {
-                  return Wrap(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 10, left: 5, right: 5),
-                        child: ListTile(
-                          leading: Icon(Icons.group),
-                          title: Text('Ver postulantes'),
-                          onTap: () async {
-                            await jobService.loadPostulantes(idJob);
-                            Navigator.pushNamed(context, 'aspirantes');
-                          },
+            onPressed: (){            
+                showModalBottomSheet(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    context: context,
+                    builder: (context) {
+                      return Wrap(
+                        children: <Widget>[
+                          Padding(padding: EdgeInsets.only(top: 10,left: 5,right: 5),
+                          child: ListTile(
+                            leading: Icon(Icons.group),
+                            title: Text('Ver postulantes'),
+                            onTap: () async {
+                              if(await jobService.loadPostulantes(idJob)){
+                                Navigator.of(context).pop();
+                                Navigator.pushNamed(context, 'aspirantes');
+                              }else{
+                                Navigator.of(context).pop();
+                                alerta(context);
+                              }
+                            },
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 10, left: 5, right: 5),
-                        child: ListTile(
-                          leading: Icon(Icons.delete),
-                          title: Text('Eliminar publicación'),
-                          onTap: () async {
-                            await jobService.eliminarJobs(idJob);
-                            await jobService.eliminarSolicitudes(idJob);
-                            await jobService.eliminarPostulaciones(idJob);
-
-                            //Actualizamos los arreglos
-                            await jobService.loadJobs();
-                            await jobService.loadMyJobs();
-                          },
+                  
+                        Padding(padding: EdgeInsets.only(bottom:10,left: 5,right: 5),
+                          child: ListTile(
+                            leading: Icon(Icons.delete),
+                            title: Text('Eliminar publicación'),
+                            onTap: () async {
+                              Navigator.of(context).pop();
+                              showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("Aviso"),
+                              content: Text("Los datos relacionados con la oferta laboral seran eliminados en su totalidad. ¿Desea continuar?"),
+                                actions: [
+                                  _cancelButton(context),
+                                  TextButton(
+                                      style: AppTheme.flatButtonStyle,
+                                      child: Text("Continuar"),
+                                      onPressed:  () async{     
+                                        await jobService.eliminarJobs(idJob);                                        
+                                
+                                        Navigator.of(context).pop();
+                                        },  
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ],
@@ -133,6 +155,31 @@ class _CardTopBar extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _cancelButton(BuildContext context){
+    return TextButton(
+      style: AppTheme.flatButtonStyle,
+      child: Text("Cancelar"),
+      onPressed:  () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+   void alerta(BuildContext context) {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        content: const Text('No se han encontrado postulantes'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Aceptar'),
+          ),
+        ],
+      )
     );
   }
 }
