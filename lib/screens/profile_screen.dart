@@ -1,27 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:findjob_app/services/services.dart';
 import 'package:findjob_app/theme/app_theme.dart';
 import 'package:findjob_app/models/models.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:findjob_app/screens/screens.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
   @override
-  _ProfileScreen createState() => _ProfileScreen();
+  Widget build(BuildContext context) {
+    return const _ProfileScreenBody();
+  }
 }
 
-class _ProfileScreen extends State<ProfileScreen> {
+class _ProfileScreenBody extends StatelessWidget {
+  const _ProfileScreenBody({
+    Key? key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    final userDataService = Provider.of<UserDataService>(context);
 
-    
-    const String userName = "Nombre del usuario";
-    const String userObjetives =
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse diam nisl, lobortis non tortor vel, mattis volutpat purus. Etiam tempor, nibh sit amet pulvinar volutpat, justo tortor iaculis dolor, et ultrices massa enim ut ante. Quisque facilisis, nulla at ultrices pretium, arcu ante vehicula orci, ";
-    const String userEmail = "example@outlock.com";
-    const String userPhone = "xxx-xxx-9999";
+    if (userDataService.isLoading) return const LoadingScreen();
+
+    final userAuth = userDataService.authUserData;
+
     return SafeArea(
-
       child: Scaffold(
         backgroundColor: AppTheme.primary,
         body: Container(
@@ -30,7 +37,6 @@ class _ProfileScreen extends State<ProfileScreen> {
           child: SingleChildScrollView(
             padding: const EdgeInsets.only(left: 20.0, right: 20.0),
             child: Column(
-              
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Container(
@@ -51,14 +57,14 @@ class _ProfileScreen extends State<ProfileScreen> {
                       child: ClipOval(
                         child: SizedBox.fromSize(
                           size: const Size.fromRadius(90), // Image radius
-                          child: _profileImage(),
+                          child: _profileImage(userAuth.photoUrl!),
                         ),
                       ),
                     ),
                   ),
                 ),
-                const Text(
-                  userName,
+                Text(
+                  userAuth.displayName,
                   style: AppTheme.subEncabezado,
                 ),
                 //Datos de usuario
@@ -72,7 +78,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                 const Padding(
                     padding: EdgeInsets.only(top: 20.0),
                     child: Text(
-                      userObjetives,
+                      "objetvios",
                       style: AppTheme.datos,
                     )),
                 //Información de contacto del usuario
@@ -92,7 +98,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                             child: Icon(Icons.phone),
                           ),
                           TextSpan(
-                            text: " $userPhone",
+                            text: "2222",
                             style: AppTheme.datos,
                           ),
                         ],
@@ -107,7 +113,7 @@ class _ProfileScreen extends State<ProfileScreen> {
                           child: Icon(Icons.email_rounded),
                         ),
                         TextSpan(
-                          text: " $userEmail",
+                          text: "email",
                           style: AppTheme.datos,
                         ),
                       ],
@@ -134,21 +140,20 @@ class _ProfileScreen extends State<ProfileScreen> {
             ),
           ),
         ),
-        floatingActionButton: _edit(),
+        floatingActionButton: _edit(context),
+        //_edit(),
       ),
     );
   }
 
-  //Foto de perfil del usuario
-  Widget _profileImage() {
+  CachedNetworkImage _profileImage(String photoUrl) {
     return CachedNetworkImage(
-      imageUrl:
-          "https://postila.ru/data/fd/d6/ca/4a/fdd6ca4ab7a95300e80ec242861f497e16ab4df12715141b89bcc96843c64f60.gif",
+      imageUrl: photoUrl,
       imageBuilder: (context, imageProvider) => Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(
             fit: BoxFit.fill,
-            image: NetworkImage("https://i.imgur.com/BoN9kdC.png"),
+            image: NetworkImage(photoUrl),
           ),
         ),
       ),
@@ -158,7 +163,7 @@ class _ProfileScreen extends State<ProfileScreen> {
     );
   }
 
-  Widget _edit() {
+  FloatingActionButton _edit(BuildContext context) {
     return FloatingActionButton(
       onPressed: () {
         // Add your onPressed code here!
@@ -169,7 +174,7 @@ class _ProfileScreen extends State<ProfileScreen> {
         );
       },
       elevation: 4,
-      backgroundColor: const Color.fromRGBO(255, 39, 114, 1),
+      backgroundColor: AppTheme.deepBlue,
       child: const Icon(Icons.edit),
     );
   }

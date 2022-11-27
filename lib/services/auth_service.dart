@@ -25,13 +25,16 @@ class AuthService extends ChangeNotifier {
     final Map<String, dynamic> decodedResp = json.decode(resp.body);
 
     if (decodedResp.containsKey("idToken")) {
-      print(decodedResp['localId']);
       await storage.write(key: "token", value: decodedResp['idToken']);
       await storage.write(key: "user_name", value: decodedResp['displayName']);
       await storage.write(key: "user_id", value: decodedResp['localId']);
 
       final userdata = UserData(
-          birthday: birthday, ownerId: decodedResp['localId'], tel: tel);
+          birthday: birthday,
+          ownerId: decodedResp['localId'],
+          tel: tel,
+          contactEmail: email,
+          displayName: displayName);
 
       await addUserData(userdata);
 

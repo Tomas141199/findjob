@@ -1,3 +1,4 @@
+export 'package:findjob_app/screens/user_details.dart';
 export 'package:findjob_app/screens/missolicitudes_screen.dart';
 export 'package:findjob_app/screens/myjobs_screen.dart';
 export 'package:findjob_app/screens/loading_screen.dart';
