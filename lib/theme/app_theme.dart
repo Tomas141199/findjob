@@ -8,6 +8,15 @@ class AppTheme {
   static const Color textColor = Color.fromRGBO(13, 13, 13, 1);
   static const Color whiteApp = Color(0xFFFFFDFC);
 
+  static final ButtonStyle flatButtonStyle = TextButton.styleFrom(
+      primary: Colors.black87,
+      minimumSize: Size(88, 36),
+      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(2.0)),
+      ),
+    );        
+
   static Color getRandomColor() {
     return Color((math.Random().nextDouble() * 0xFFFFFF).toInt())
         .withOpacity(1.0);

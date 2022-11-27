@@ -72,7 +72,8 @@ class _DataJob extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    
+    
     //Cada accion equivale a una posición de este arreglo
     List<String> acciones=["Postularse"];
 
@@ -89,6 +90,13 @@ class _DataJob extends StatelessWidget {
     final job = jobForm.job;
     final jobService = Provider.of<JobsService>(context);
 
+    Widget cancelButton = TextButton(
+      style: AppTheme.flatButtonStyle,
+      child: Text("Cancelar"),
+      onPressed:  () {
+        Navigator.of(context).pop();
+      },
+    );
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -257,8 +265,31 @@ class _DataJob extends StatelessWidget {
 
                           //Agregamos la postulación del solicitante
                           //Agregamos al aspirante al trabajo  
-                          await jobService.postularseJob(jobForm.job);
-                          await jobService.agregarAspiranteJob(jobForm.job);                        
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("Aviso"),
+                              content: Text("Al postularse empezara el proceso de postulación, donde el empleador podra ponerse en contacto con usted. ¿Desea continuar?."),
+                                actions: [
+                                  cancelButton,
+                                  TextButton(
+                                      style: AppTheme.flatButtonStyle,
+                                      child: Text("Continuar"),
+                                      onPressed:  () async{     
+                                          if(await jobService.postularseJob(jobForm.job)){
+                                            print("Postulado");
+                                            await jobService.agregarAspiranteJob(jobForm.job);  
+                                            Navigator.of(context).pop();
+                                            alerta(context);
+                                          }
+                                        },  
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                                                
 
                       },
                       color: AppTheme.deepBlue,
@@ -312,6 +343,21 @@ class _DataJob extends StatelessWidget {
     return const TextStyle(
       fontSize: 14.0,
       color: Colors.black,
+    );
+  }
+
+  void alerta(BuildContext context) {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        content: const Text('Su postulación ha sido enviada al empleador/empresa correspondiente.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Aceptar'),
+          ),
+        ],
+      )
     );
   }
 
