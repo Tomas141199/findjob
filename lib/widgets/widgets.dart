@@ -8,3 +8,8 @@ export 'package:findjob_app/widgets/register_form.dart';
 export 'package:findjob_app/widgets/card_container.dart';
 export 'package:findjob_app/widgets/auth_background.dart';
 export 'package:findjob_app/widgets/postulantes.dart';
+
+export 'package:findjob_app/widgets/header_chat.dart';
+export 'package:findjob_app/widgets/footer_new_message.dart';
+
+

@@ -1,10 +1,12 @@
 import 'package:findjob_app/models/job_solicitud.dart';
+import 'package:findjob_app/models/models.dart';
 import 'package:findjob_app/services/services.dart';
 import 'package:findjob_app/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../models/widget_arguments.dart';
 import '../services/jobs_service.dart';
 import '../widgets/postulantes.dart';
 import 'loading_screen.dart';
@@ -17,6 +19,7 @@ class AspirantesScreen extends StatelessWidget {
     final jobsService = Provider.of<JobsService>(context);
     final userDataService = Provider.of<UserDataService>(context);
     final jobsList = jobsService.aspirantes;
+
 
     if (jobsService.isLoading) {
       return const LoadingScreen();
@@ -52,6 +55,7 @@ class AspirantesScreen extends StatelessWidget {
               await userDataService
                   .setUserSelected(jobsList[index].idSolicitante);
               print(jobsList[index].idSolicitante);
+
               Navigator.pushNamed(context, 'userProfile');
             },
             child: Hero(
@@ -75,6 +79,13 @@ class _SlidableItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final jobsService = Provider.of<JobsService>(context);
+    
+    final chatService = Provider.of<ChatMessageService>(context);
+    final List<ChatUser> chats = chatService.chats;
+    jobsService.selectedJobSolicitud = this.job;
+
     return Slidable(
         startActionPane: ActionPane(
           motion: const StretchMotion(),
@@ -96,7 +107,22 @@ class _SlidableItem extends StatelessWidget {
               icon: Icons.email,
               foregroundColor: Colors.white,
               label: 'Mensaje',
-              onPressed: (context) {},
+              onPressed: (context) {
+                //Indicamos la solicitud en la que nos estamos posicionando
+                jobsService.selectedJobSolicitud=job.copy();
+                var index=chatService.chats.indexWhere((element) => element.id == job.idSolicitante);
+                if(index!=-1){
+                  print("Ya se tiene un chat previo con el index ${index}");
+                  chatService.chatSelected = chats[index].copy();
+                  chatService.loadChatMessages();
+                  Navigator.pushNamed(context, 'chatScreen',arguments: WidgetArguments(edit: true,action: 2) );
+                }else{
+                  print("No se tiene un chat previo con el usuario");
+                  chatService.chatMessages.clear();
+                  Navigator.pushNamed(context, 'chatScreen',arguments: WidgetArguments(edit: true,action: 1));
+                }
+                
+              },
             ),
           ],
         ),

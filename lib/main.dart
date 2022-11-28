@@ -20,7 +20,9 @@ class AppState extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UiProvider()),
         ChangeNotifierProvider(create: (_) => JobsService()),
         ChangeNotifierProvider(create: (_) => UserDataService()),
+        ChangeNotifierProvider(create: (_) => ChatMessageService()),
         ChangeNotifierProvider(create: (_) => JobsProvider()),
+
       ],
       child: const MyApp(),
     );

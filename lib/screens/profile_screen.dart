@@ -30,6 +30,14 @@ class _ProfileScreenBody extends StatelessWidget {
     if (userDataService.isLoading) return const LoadingScreen();
 
     final userAuth = userDataService.authUserData;
+    print(userAuth.birthday);
+    print(userAuth.contactEmail);
+    print(userAuth.description);
+    print(userAuth.displayName);
+    print(userAuth.docUrl);
+    print(userAuth.ownerId);
+    print(userAuth.photoUrl); 
+    print(userAuth.tel);
 
     return SafeArea(
       child: Scaffold(
@@ -52,19 +60,15 @@ class _ProfileScreenBody extends StatelessWidget {
                     border: Border.all(
                         color: const Color.fromRGBO(13, 13, 13, 0.8), width: 2),
                   ),
-                  child: Stack(
-                    children: [
-                      CircleAvatar(
-                        radius: 150,
-                        backgroundColor: const Color.fromRGBO(13, 13, 13, 0.8),
-                        child: Padding(
-                          padding: const EdgeInsets.all(0), // Border radius
-                          child: ClipOval(
-                            child: SizedBox.fromSize(
-                              size: const Size.fromRadius(90), // Image radius
-                              child: getImage(userAuth.photoUrl),
-                            ),
-                          ),
+                  child: CircleAvatar(
+                    radius: 150,
+                    backgroundColor: const Color.fromRGBO(13, 13, 13, 0.8),
+                    child: Padding(
+                      padding: const EdgeInsets.all(0), // Border radius
+                      child: ClipOval(
+                        child: SizedBox.fromSize(
+                          size: const Size.fromRadius(90), // Image radius
+                          child: _profileImage(userAuth.photoUrl??"https://www.fcmlindia.com/images/fifty-days-campaign/no-image.jpg"),
                         ),
                       ),
                       Positioned(
@@ -115,10 +119,10 @@ class _ProfileScreenBody extends StatelessWidget {
                     style: AppTheme.subEncabezadoDos,
                   ),
                 ),
-                Padding(
+                 Padding(
                     padding: EdgeInsets.only(top: 20.0),
                     child: Text(
-                      userAuth.description ?? "Sin nada aun",
+                      userAuth.description!=null?userAuth.description.toString():"No se ha ingresado los datos de este apartado.",
                       style: AppTheme.datos,
                     )),
                 //Información de contacto del usuario
@@ -132,13 +136,14 @@ class _ProfileScreenBody extends StatelessWidget {
                 Padding(
                     padding: const EdgeInsets.only(top: 20.0),
                     child: RichText(
-                      text: TextSpan(
+                    text:  TextSpan(
                         children: [
                           const WidgetSpan(
                             child: Icon(Icons.phone),
                           ),
                           TextSpan(
-                            text: userAuth.tel.toString(),
+                            text:" "+userAuth.tel.toString(),
+
                             style: AppTheme.datos,
                           ),
                         ],
@@ -147,13 +152,15 @@ class _ProfileScreenBody extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: RichText(
-                    text: TextSpan(
+
+                    text:  TextSpan(
                       children: [
                         const WidgetSpan(
                           child: Icon(Icons.email_rounded),
                         ),
                         TextSpan(
-                          text: userAuth.contactEmail,
+                          text: " "+userAuth.contactEmail.toString(),
+
                           style: AppTheme.datos,
                         ),
                       ],
