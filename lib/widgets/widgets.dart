@@ -1,3 +1,4 @@
+export 'package:findjob_app/widgets/job_slider.dart';
 export 'package:findjob_app/widgets/item_oferta_dos.dart';
 export 'package:findjob_app/widgets/item_oferta_tres.dart';
 export 'package:findjob_app/widgets/item_oferta.dart';

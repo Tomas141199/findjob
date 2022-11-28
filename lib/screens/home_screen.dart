@@ -1,4 +1,5 @@
 import 'package:findjob_app/screens/screens.dart';
+import 'package:findjob_app/search/search_delegate.dart';
 import 'package:findjob_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +24,13 @@ class HomeScreen extends StatelessWidget {
             Navigator.pushReplacementNamed(context, 'login');
           },
         ),
+        actions: [
+          IconButton(
+            onPressed: () =>
+                showSearch(context: context, delegate: JobSearchDelegate()),
+            icon: const Icon(Icons.search_rounded),
+          )
+        ],
         title: const Text("FindJob",
             textAlign: TextAlign.center,
             style: TextStyle(

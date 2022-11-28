@@ -51,7 +51,7 @@ class _JobBodyScreen extends StatelessWidget {
                     child: IconButton(
                       onPressed: () => Navigator.of(context).pop(),
                       icon: const Icon(
-                        Icons.arrow_back_ios_new,
+                        Icons.arrow_back_rounded,
                         size: 40,
                         color: Colors.white,
                       ),

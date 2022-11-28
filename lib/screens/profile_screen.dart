@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:findjob_app/services/services.dart';
@@ -68,9 +71,42 @@ class _ProfileScreenBody extends StatelessWidget {
                           child: _profileImage(userAuth.photoUrl??"https://www.fcmlindia.com/images/fifty-days-campaign/no-image.jpg"),
                         ),
                       ),
-                    ),
+                      Positioned(
+                        top: 0,
+                        right: 10,
+                        child: IconButton(
+                          onPressed: () async {
+                            final picker = ImagePicker();
+                            final PickedFile? pickedFile =
+                                await picker.getImage(
+                                    source: ImageSource.gallery,
+                                    imageQuality: 100);
+                            if (pickedFile == null) {
+                              return;
+                            }
+                            //jobService
+                            //.updateSelectedProductImage(pickedFile.path);
+                            userDataService
+                                .updateSelectedUserImage(pickedFile.path);
+                            String? result =
+                                await userDataService.uploadImage();
+
+                            if (result != null) {
+                              userDataService.authUserData.photoUrl = result;
+                              await userDataService.updateCurrentUser();
+                            }
+                          },
+                          icon: const Icon(
+                            Icons.add_a_photo,
+                            size: 40,
+                            color: AppTheme.primary,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+
                 Text(
                   userAuth.displayName,
                   style: AppTheme.subEncabezado,
@@ -100,13 +136,14 @@ class _ProfileScreenBody extends StatelessWidget {
                 Padding(
                     padding: const EdgeInsets.only(top: 20.0),
                     child: RichText(
-                      text:  TextSpan(
+                    text:  TextSpan(
                         children: [
-                          WidgetSpan(
+                          const WidgetSpan(
                             child: Icon(Icons.phone),
                           ),
                           TextSpan(
                             text:" "+userAuth.tel.toString(),
+
                             style: AppTheme.datos,
                           ),
                         ],
@@ -115,13 +152,15 @@ class _ProfileScreenBody extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: RichText(
+
                     text:  TextSpan(
                       children: [
-                        WidgetSpan(
+                        const WidgetSpan(
                           child: Icon(Icons.email_rounded),
                         ),
                         TextSpan(
                           text: " "+userAuth.contactEmail.toString(),
+
                           style: AppTheme.datos,
                         ),
                       ],
@@ -184,6 +223,24 @@ class _ProfileScreenBody extends StatelessWidget {
       elevation: 4,
       backgroundColor: AppTheme.deepBlue,
       child: const Icon(Icons.edit),
+    );
+  }
+
+  Widget getImage(String? picture) {
+    if (picture == null) {
+      return const Image(
+        image: AssetImage('assets/no-image.png'),
+        fit: BoxFit.cover,
+      );
+    }
+
+    if (picture.startsWith('http')) {
+      return _profileImage(picture);
+    }
+
+    return Image.file(
+      File(picture),
+      fit: BoxFit.cover,
     );
   }
 }
