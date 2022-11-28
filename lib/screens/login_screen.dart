@@ -72,6 +72,10 @@ class _LoginForm extends State<LoginForm> {
   Widget build(BuildContext context) {  
     final jobService = Provider.of<JobsService>(context);    
     final loginForm = Provider.of<LoginFormProvider>(context);
+    final messages = Provider.of<ChatMessageService>(context);
+
+    final userDataService = Provider.of<UserDataService>(context);
+
     return Form(
       key: loginForm.formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -152,7 +156,8 @@ class _LoginForm extends State<LoginForm> {
 
                       if (errorMessage == null) {
                         await jobService.loadJobs();
-                        await jobService.loadMyJobs();
+                        await userDataService.loadCurrentUser();
+                        await messages.loadChats();
                         Navigator.pushReplacementNamed(context, 'home');
 
                       } else {

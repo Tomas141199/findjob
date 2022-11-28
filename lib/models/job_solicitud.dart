@@ -13,6 +13,7 @@ class JobSolicitud {
     required this.idEmpleador,
     required this.nombreEmpleador,
     required this.solicitadoAt,
+    required this.telefono,
   });
 
   String? id;
@@ -22,6 +23,7 @@ class JobSolicitud {
   String idEmpleador;
   String nombreEmpleador;
   String solicitadoAt;
+  String telefono;
 
   factory JobSolicitud.fromJson(String str) => JobSolicitud.fromMap(json.decode(str));
 
@@ -34,6 +36,7 @@ class JobSolicitud {
         idEmpleador: json["idEmpleador"],
         nombreEmpleador: json["nombreEmpleador"],
         solicitadoAt: json["solicitadoAt"],
+        telefono:json["telefono"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -43,6 +46,7 @@ class JobSolicitud {
         "idEmpleador": idEmpleador,
         "nombreEmpleador": nombreEmpleador,
         "solicitadoAt": solicitadoAt,
+        "telefono":telefono,
       };
 
   JobSolicitud copy() => JobSolicitud(
@@ -53,5 +57,6 @@ class JobSolicitud {
         idEmpleador: idEmpleador,
         nombreEmpleador: nombreEmpleador,
         solicitadoAt: solicitadoAt,
+        telefono: telefono,
       );
 }

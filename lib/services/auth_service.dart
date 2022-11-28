@@ -34,7 +34,8 @@ class AuthService extends ChangeNotifier {
           ownerId: decodedResp['localId'],
           tel: tel,
           contactEmail: email,
-          displayName: displayName);
+          displayName: displayName
+        );
 
       await addUserData(userdata);
 

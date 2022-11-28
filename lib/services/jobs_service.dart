@@ -17,6 +17,7 @@ class JobsService extends ChangeNotifier {
 
   final List<Job> myJobsSolicitados = []; //Del usuario (Aspirante)
 
+  late JobSolicitud selectedJobSolicitud;
   late Job selectedJob;
   File? newPictureFile;
   bool isLoading = true;
@@ -72,6 +73,7 @@ class JobsService extends ChangeNotifier {
         myJobs.add(tempJob);
       }
     });
+    print("salio");
     isLoading = false;
     notifyListeners();
     return myJobs;
@@ -165,7 +167,7 @@ class JobsService extends ChangeNotifier {
 
   //Solicitude de postulación
 
-  Future<bool> postularseJob(Job job) async {
+  Future<bool> postularseJob(Job job, String user_telefono) async {
     //Id del usuario logueado
     var nombreSolicitante = await storage.read(key: "user_name") ?? '';
     var idUserLogueado = await storage.read(key: "user_id") ?? '';
@@ -173,6 +175,7 @@ class JobsService extends ChangeNotifier {
     var idEmpleador = job.authorId;
     var nombreEmpleador = job.author;
     JobSolicitud jobSolicitud;
+
     //Mostramos los datos del trabajo seleccionado
 
     jobSolicitud = new JobSolicitud(
@@ -181,7 +184,9 @@ class JobsService extends ChangeNotifier {
         idEmpleo: idEmpleo,
         idEmpleador: idEmpleador,
         nombreEmpleador: nombreEmpleador,
-        solicitadoAt: DateTime.now().toString());
+        solicitadoAt: DateTime.now().toString(),
+        telefono: user_telefono,
+      );
 
     try {
       final url = Uri.https(_baseUrl, 'postulaciones/${idUserLogueado}.json');
@@ -203,7 +208,7 @@ class JobsService extends ChangeNotifier {
     }
   }
 
-  Future<String> agregarAspiranteJob(Job job) async {
+  Future<String> agregarAspiranteJob(Job job, String user_telefono) async {
     //Id del usuario logueado (aspirante)
     var nombreSolicitante = await storage.read(key: "user_name") ?? '';
     var idUserLogueado = await storage.read(key: "user_id") ?? '';
@@ -219,7 +224,9 @@ class JobsService extends ChangeNotifier {
         idEmpleo: idEmpleo,
         idEmpleador: idEmpleador,
         nombreEmpleador: nombreEmpleador,
-        solicitadoAt: DateTime.now().toString());
+        solicitadoAt: DateTime.now().toString(),
+        telefono: user_telefono,
+      );
 
     final url = Uri.https(_baseUrl, 'solicitudes/${idEmpleo}.json');
     final resp = await http.post(url, body: jobSolicitud.toJson());

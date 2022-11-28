@@ -70,6 +70,7 @@ class _DataJob extends StatelessWidget {
 
     //Cada accion equivale a una posición de este arreglo
     List<String> acciones = ["Postularse"];
+    final userService = Provider.of<UserDataService>(context);
 
     final String texto;
     final args = ModalRoute.of(context)!.settings.arguments as WidgetArguments;
@@ -256,9 +257,9 @@ class _DataJob extends StatelessWidget {
                                       style: AppTheme.flatButtonStyle,
                                       child: Text("Continuar"),
                                       onPressed:  () async{     
-                                          if(await jobService.postularseJob(jobForm.job)){
+                                          if(await jobService.postularseJob(jobForm.job, userService.authUserData.tel.toString())){
                                             print("Postulado");
-                                            await jobService.agregarAspiranteJob(jobForm.job);  
+                                            await jobService.agregarAspiranteJob(jobForm.job,userService.authUserData.tel.toString());  
                                             Navigator.of(context).pop();
                                             alerta(context);
                                           }

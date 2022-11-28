@@ -1,4 +1,5 @@
 import 'package:findjob_app/models/models.dart';
+import 'package:findjob_app/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 import '../screens/jobs_data.dart';
 import '../screens/screens.dart';
@@ -59,6 +60,12 @@ class AppRoutes {
       route: 'aspirantes',
       name: 'verAspirantes',
       screen: const AspirantesScreen(),
+      icon: Icons.add,
+    ),
+    ScreenOption(
+      route: 'chatScreen',
+      name: 'chatear',
+      screen: const ChatScreen(),
       icon: Icons.add,
     ),
   ];
