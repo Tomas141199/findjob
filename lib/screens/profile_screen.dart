@@ -115,10 +115,10 @@ class _ProfileScreenBody extends StatelessWidget {
                     style: AppTheme.subEncabezadoDos,
                   ),
                 ),
-                const Padding(
+                Padding(
                     padding: EdgeInsets.only(top: 20.0),
                     child: Text(
-                      "objetvios",
+                      userAuth.description ?? "Sin nada aun",
                       style: AppTheme.datos,
                     )),
                 //Información de contacto del usuario
@@ -132,13 +132,13 @@ class _ProfileScreenBody extends StatelessWidget {
                 Padding(
                     padding: const EdgeInsets.only(top: 20.0),
                     child: RichText(
-                      text: const TextSpan(
+                      text: TextSpan(
                         children: [
-                          WidgetSpan(
+                          const WidgetSpan(
                             child: Icon(Icons.phone),
                           ),
                           TextSpan(
-                            text: "2222",
+                            text: userAuth.tel.toString(),
                             style: AppTheme.datos,
                           ),
                         ],
@@ -147,13 +147,13 @@ class _ProfileScreenBody extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: RichText(
-                    text: const TextSpan(
+                    text: TextSpan(
                       children: [
-                        WidgetSpan(
+                        const WidgetSpan(
                           child: Icon(Icons.email_rounded),
                         ),
                         TextSpan(
-                          text: "email",
+                          text: userAuth.contactEmail,
                           style: AppTheme.datos,
                         ),
                       ],

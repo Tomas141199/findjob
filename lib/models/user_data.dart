@@ -2,6 +2,7 @@ import 'dart:convert';
 
 class UserData {
   UserData({
+    this.id,
     required this.birthday,
     required this.contactEmail,
     this.description,
@@ -47,4 +48,16 @@ class UserData {
         "photoUrl": photoUrl,
         "tel": tel,
       };
+
+  UserData copy() => UserData(
+        id: id,
+        birthday: birthday,
+        contactEmail: contactEmail,
+        description: description,
+        displayName: displayName,
+        docUrl: docUrl,
+        ownerId: ownerId,
+        photoUrl: photoUrl,
+        tel: tel,
+      );
 }

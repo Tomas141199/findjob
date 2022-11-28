@@ -8,6 +8,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class UserDataService extends ChangeNotifier {
   final String _baseUrl = 'findjob-410cf-default-rtdb.firebaseio.com';
   final storage = const FlutterSecureStorage();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   late UserData selectedUser;
   File? newPictureFile;
@@ -73,6 +74,7 @@ class UserDataService extends ChangeNotifier {
 
   updateCurrentUser() async {
     isLoading = true;
+    print(authUserData.displayName);
     notifyListeners();
     final url = Uri.https(_baseUrl, 'userdata/${authUserData.id}.json');
     final resp = await http.put(url, body: authUserData.toJson());
@@ -115,5 +117,10 @@ class UserDataService extends ChangeNotifier {
 
     final decodeData = json.decode(resp.body);
     return decodeData['secure_url'];
+  }
+
+  bool isValidForm() {
+    print(formKey.currentState?.validate());
+    return formKey.currentState?.validate() ?? false;
   }
 }
