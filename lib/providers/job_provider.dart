@@ -8,7 +8,7 @@ import 'package:findjob_app/models/models.dart';
 
 class JobsProvider extends ChangeNotifier {
   final String _baseUrl = 'findjob-410cf-default-rtdb.firebaseio.com';
-
+  List<Job> allJobs = [];
   final debouncer = Debouncer(
     duration: const Duration(milliseconds: 500),
   );
@@ -19,6 +19,21 @@ class JobsProvider extends ChangeNotifier {
 
   JobsProvider() {
     print('MoviesProvider inicializado');
+    getAllJobs();
+  }
+
+  getAllJobs() async {
+    final url = Uri.https(_baseUrl, 'jobs.json');
+    final resp = await http.get(url);
+    final Map<String, dynamic> jobsMap = json.decode(resp.body);
+
+    jobsMap.forEach((key, value) {
+      final tempJob = Job.fromMap(value);
+      tempJob.id = key;
+      allJobs.add(tempJob);
+    });
+
+    notifyListeners();
   }
 
   searchMovies(String query) async {

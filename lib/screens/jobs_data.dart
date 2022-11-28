@@ -1,6 +1,7 @@
-import 'package:findjob_app/models/models.dart';
+import 'package:findjob_app/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:findjob_app/models/models.dart';
 import 'package:findjob_app/services/services.dart';
 import 'package:findjob_app/providers/providers.dart';
 import 'package:findjob_app/theme/app_theme.dart';
@@ -28,6 +29,8 @@ class _JobBodyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final jobProvider = Provider.of<JobsProvider>(context);
+
     return Scaffold(
       backgroundColor: AppTheme.primary,
       body: CustomScrollView(
@@ -37,9 +40,17 @@ class _JobBodyScreen extends StatelessWidget {
             delegate: SliverChildListDelegate([
               Container(
                 decoration: _backgroundScaffold(),
-                child: Padding(
-                  padding: EdgeInsets.only(top: 30.0, right: 25.0, left: 25.0),
-                  child: _DataJob(),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding:
+                          EdgeInsets.only(top: 30.0, right: 25.0, left: 25.0),
+                      child: _DataJob(),
+                    ),
+                    JobSlider(
+                        title: "Encuentra más opciones",
+                        jobs: jobProvider.allJobs),
+                  ],
                 ),
               ),
             ]),
@@ -348,7 +359,7 @@ class SliverAppBarWidget extends StatelessWidget {
     bool modoEdicion = args.edit;
 
     return SliverAppBar(
-      backgroundColor: Colors.indigo,
+      backgroundColor: AppTheme.primary,
       expandedHeight: 300,
       floating: false,
       pinned: true,
