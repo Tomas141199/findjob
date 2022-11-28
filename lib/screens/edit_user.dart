@@ -1,7 +1,6 @@
 import 'package:findjob_app/theme/app_theme.dart';
-import 'package:findjob_app/widgets/register_form.dart';
+import 'package:findjob_app/widgets/edit_form.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -46,13 +45,13 @@ class EditionScreen extends StatelessWidget {
                 const Padding(
                   padding: EdgeInsets.only(bottom: 20.0),
                   child: Text(
-                    'Formulario de edición',
+                    'Edita tu informacion de contacto',
                     style: AppTheme.subEncabezado,
                   ),
                 ),
                 ChangeNotifierProvider(
                   create: (_) => RegisterFormProvider(),
-                  child: const RegisterForm(),
+                  child: const EditFormUser(),
                 ),
               ],
             ),
