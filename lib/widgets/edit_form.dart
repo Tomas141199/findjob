@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
@@ -186,7 +187,15 @@ class _EditFormUser extends State<EditFormUser> {
                       if (!userDataService.isValidForm()) return;
                       userDataService.authUserData = userData.copy();
                       print("Actualizando datos del usuario");
-                      await userDataService.updateCurrentUser();
+
+                      String? newDocUrl = await userDataService.uploadFile();
+                      if (newDocUrl != null) {
+                        String? docJPG =
+                            newDocUrl.replaceFirst(RegExp(r".pdf"), ".jpg");
+                        userData.docUrl = docJPG;
+
+                        await userDataService.updateCurrentUser();
+                      }
                     },
               color: AppTheme.primary,
               child: Text(userDataService.isLoading ? 'Espere' : 'Guardar',
@@ -196,6 +205,23 @@ class _EditFormUser extends State<EditFormUser> {
                           : Colors.white)),
             ),
           ),
+          Column(
+            children: [
+              FloatingActionButton(
+                elevation: 0,
+                onPressed: () async {
+                  final result =
+                      await FilePicker.platform.pickFiles(allowMultiple: false);
+                  if (result == null) return;
+                  final file = result.files.first;
+                  userDataService.updateSelectedUserDoc(file.path!);
+                },
+                child: const Icon(Icons.upload_file_rounded),
+              ),
+              const SizedBox(height: 10),
+              const Text("Subir CV o Documento"),
+            ],
+          )
         ],
       ),
     );
