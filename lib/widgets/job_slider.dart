@@ -82,7 +82,7 @@ class _MoviePoster extends StatelessWidget {
           const SizedBox(height: 5),
           Text(
             job.title,
-            maxLines: 2,
+            maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
           )

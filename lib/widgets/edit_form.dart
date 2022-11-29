@@ -17,7 +17,6 @@ class _EditFormUser extends State<EditFormUser> {
   bool visible = false;
 
   TextEditingController dateInput = TextEditingController();
-
   @override
   void initState() {
     dateInput.text = "";
@@ -28,6 +27,7 @@ class _EditFormUser extends State<EditFormUser> {
   Widget build(BuildContext context) {
     final userDataService = Provider.of<UserDataService>(context);
     final userData = userDataService.authUserData.copy();
+    dateInput.text = userData.birthday;
 
     return Form(
       key: userDataService.formKey,
@@ -166,7 +166,7 @@ class _EditFormUser extends State<EditFormUser> {
               onChanged: (value) => userData.description = value,
               //Decoración del textFormField
               decoration: const InputDecoration(
-                labelText: 'Descripción del empleo',
+                labelText: 'Descripción del usuario',
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 20, horizontal: 10),
               ),

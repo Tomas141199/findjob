@@ -13,15 +13,19 @@ class UserProfileScreen extends StatelessWidget {
     final userService = Provider.of<UserDataService>(context);
     final user = userService.selectedUser;
     return Scaffold(
-        body: CustomScrollView(
+      
+        body: 
+        CustomScrollView(
+          
       slivers: [
         _CustomAppBar(user),
         SliverList(
+          
             delegate: SliverChildListDelegate([
           _PosterAndTitle(user),
-          _Overview(user.description!),
-          _Overview(user.description!),
-          _Overview(user.description!),
+          _Overview(user.description!,""),
+          _Overview("Los datos de este usuario aún no han sido verificados por el usuario.","Verificación de datos"),
+          _Overview("Este usuario no ha subido documentos para su visualización.","Documentos"),
         ]))
       ],
     ));
@@ -48,15 +52,11 @@ class _CustomAppBar extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
           color: Colors.black12,
-          child: Text(
-            user.displayName,
-            style: const TextStyle(fontSize: 16),
-            textAlign: TextAlign.center,
-          ),
+          
         ),
         background: FadeInImage(
           placeholder: const AssetImage('assets/giphy.gif'),
-          image: NetworkImage(user.photoUrl!),
+          image: NetworkImage(user.photoUrl??"https://www.fcmlindia.com/images/fifty-days-campaign/no-image.jpg"),
           fit: BoxFit.cover,
         ),
       ),
@@ -75,65 +75,97 @@ class _PosterAndTitle extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return Container(
-      margin: const EdgeInsets.only(top: 20),
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      margin: const EdgeInsets.only(bottom: 0, top: 10),
       child: Row(
-        children: [
-          Hero(
-            tag: user.id!,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: FadeInImage(
-                placeholder: const AssetImage('assets/no-image.png'),
-                image: NetworkImage(user.photoUrl!),
-                height: 150,
+        
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Padding(padding: EdgeInsets.only(left:20,right: 10,top: 10),
+          
+            child:Hero(
+              tag: user.id!,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: FadeInImage(
+                  placeholder: const AssetImage('assets/no-image.png'),
+                  image: NetworkImage(user.photoUrl??"https://www.fcmlindia.com/images/fifty-days-campaign/no-image.jpg"),
+                  height: 150,
+                ),
               ),
             ),
           ),
-          const SizedBox(width: 20),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(user.displayName,
-                  style: textTheme.headline5,
+
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                
+                Padding(padding: EdgeInsets.only(left: 20,right: 10),
+                child:Text(user.displayName,
+                  style: TextStyle(fontSize: 20,color: AppTheme.deepBlue, fontWeight: FontWeight.w500),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2),
-              Text(user.contactEmail,
-                  style: textTheme.subtitle1,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2),
-              Row(
-                children: [
-                  const Icon(Icons.call, size: 15, color: Colors.grey),
-                  const SizedBox(width: 5),
-                  Text(
-                    '${user.tel}',
-                    style: textTheme.caption,
-                  )
-                ],
-              )
-            ],
-          )
+                ),
+
+                Padding(padding: EdgeInsets.only(left: 20,right: 10),
+                  child:Text(
+                    user.tel.toString(),
+                    style: textTheme.subtitle1,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2
+                  ),
+                ),
+                Padding(padding: EdgeInsets.only(left: 20,right: 10),
+                  child:Text(
+                    user.contactEmail,
+                    style: textTheme.subtitle1,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2
+                  ),
+                ),
+                 
+              ],
+            ),
+          ),
+        
         ],
       ),
+
     );
   }
 }
 
 class _Overview extends StatelessWidget {
   final String description;
-
-  const _Overview(this.description);
+  final String title;
+  const _Overview(this.description, this.title);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-      child: Text(
-        description,
-        textAlign: TextAlign.justify,
-        style: Theme.of(context).textTheme.subtitle1,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+      child: Wrap(
+        alignment:WrapAlignment.start,
+        children: <Widget>[
+
+          title.length>0?Text(
+            title,
+            style: AppTheme.subEncabezadoDos,
+          ):Text(
+            '',
+          ),
+
+          Text(
+            "\n"+description+"\n",
+            style: AppTheme.datos,
+          ),
+
+        ],
+      )
+      
+      
+     
     );
   }
 }

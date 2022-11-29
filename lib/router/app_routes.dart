@@ -3,6 +3,7 @@ import 'package:findjob_app/screens/chat_screen.dart';
 import 'package:flutter/material.dart';
 import '../screens/jobs_data.dart';
 import '../screens/screens.dart';
+import '../screens/user_details.dart';
 
 class AppRoutes {
   static const initialRoute = 'checking';
@@ -20,12 +21,7 @@ class AppRoutes {
       screen: const HomeScreen(),
       icon: Icons.home,
     ),
-    ScreenOption(
-      route: 'userProfile',
-      name: 'Profile',
-      screen: const UserProfileScreen(),
-      icon: Icons.home,
-    ),
+   
     ScreenOption(
       route: 'registro',
       name: 'Registro',
@@ -66,6 +62,12 @@ class AppRoutes {
       route: 'chatScreen',
       name: 'chatear',
       screen: const ChatScreen(),
+      icon: Icons.add,
+    ),
+    ScreenOption(
+      route: 'userDetails',
+      name: 'details',
+      screen: const UserProfileScreen(),
       icon: Icons.add,
     ),
   ];

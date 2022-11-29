@@ -436,8 +436,15 @@ class JobsService extends ChangeNotifier {
 
   //Métodos implementados para la cancelación de la postulación
   //Dichos métodos solo se usan desde la interfaz de empleos/solicitudes
-  Future<void> eliminarPostulacionesAspirante(var idEmpleo_) async {
-    var idUser = await storage.read(key: "user_id") ?? '';
+  Future<void> eliminarPostulacionesAspirante(var idEmpleo_,var idAspirante_) async {
+
+    var idUser="";
+    if(idAspirante_==""){
+      idUser = await storage.read(key: "user_id") ?? '';
+    }else{
+      idUser = idAspirante_;
+    }
+
     final url = Uri.https(_baseUrl, 'postulaciones/$idUser.json');
     var idPostulacion;
 
@@ -474,41 +481,70 @@ class JobsService extends ChangeNotifier {
     }
   }
 
-  Future<void> eliminarSolicitudesAspirante(var idEmpleo) async {
+  Future<void> eliminarSolicitudesAspirante(var idEmpleo, var idAspirante) async {
+
+    print("Estamos en la función de eliminación: $idAspirante");
+
     isLoading = true;
     notifyListeners();
+    
+    var idUser="";
+    if(idAspirante==""){
+      //En caso de que se rechace al aspirante
+      idUser = await storage.read(key: "user_id") ?? '';
+    }else{
+      //En caso de que el aspirante cancele la solicitud
+      idUser = idAspirante;
+    }
 
-    var idUser = await storage.read(key: "user_id") ?? '';
     final url = Uri.https(_baseUrl, 'solicitudes/$idEmpleo.json');
-    var idPostulacion;
-
+    JobSolicitud aux;
     try {
       final resp = await http.get(url);
       final Map<String, dynamic> jobsMap = json.decode(resp.body);
 
-      //Eliminamos el elemento de las solicitudes
-      final urlDos = Uri.https(_baseUrl, 'solicitudes/$idEmpleo.json');
-      http.delete(urlDos).then((response) {
-        print(response.statusCode);
-        print(response.body);
-        if (response.statusCode >= 400) {
-          throw HttpException(
-              "Ha ocurrido un error durante la eliminación de solicitudes");
-        } else {
-          solicitudes.removeAt(solicitudes
-              .indexWhere((element) => element.idEmpleo == idEmpleo));
-          myJobsSolicitados.removeAt(myJobsSolicitados
-              .indexWhere((element) => element.id == idEmpleo));
-          //Eliminamos el elemento de aspirantes postulados
-          eliminarPostulacionesAspirante(idEmpleo);
+      jobsMap.forEach((key, value) {
+        final tempJob = JobSolicitud.fromMap(value);
+        tempJob.id = key;
+        if(tempJob.idSolicitante==idUser){
+          aux=tempJob;
 
-          //Eliminamos la solicitud de nuestro arreglo
-          print(
+          //Hacemos la eliminación
+          final url_ = Uri.https(_baseUrl, 'solicitudes/$idEmpleo/${tempJob.id}.json');
+          print("tempoJO ${tempJob.id}");
+          http.delete(url_).then((response) {
+            print(response.statusCode);
+            print(response.body);
+            if (response.statusCode >= 400) {
+              throw HttpException(
+                "Ha ocurrido un error durante la eliminación de solicitudes");
+            } else {
+
+            if(idAspirante==""){
+              solicitudes.removeAt(solicitudes
+                .indexWhere((element) => element.idEmpleo == idEmpleo));
+              myJobsSolicitados.removeAt(myJobsSolicitados
+                .indexWhere((element) => element.id == idEmpleo));
+            }else{
+              /*Cancelamos la solicitud del aspirante  
+              Borramos el elmento del aspirante*/
+              aspirantes.removeAt(aspirantes.indexWhere((element) => element.idSolicitante == idAspirante));          
+              //notifyListeners();
+            }
+          
+            //Eliminamos el elemento de aspirantes postulados
+            eliminarPostulacionesAspirante(idEmpleo,idAspirante );
+
+            //Eliminamos la solicitud de nuestro arreglo
+            print(
               "Elemento eliminado exitosamente de la seccion de solicitudes desde aspirantes");
-          isLoading = false;
-          notifyListeners();
-        }
+              isLoading = false;
+              notifyListeners();
+              }
+            });
+          }
       });
+      
     } catch (e) {
       print("Error en la sección de postulaciones");
       isLoading = false;
