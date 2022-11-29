@@ -21,7 +21,6 @@ class ChatMessageService extends ChangeNotifier {
 
   ChatMessageService() {
     loadChats();
-    
   }
 
   Future<List<ChatUser>> loadChats() async {
@@ -89,7 +88,7 @@ class ChatMessageService extends ChangeNotifier {
     mensajes.forEach((key, value) {
       final tempChatsMessages = ChatMessage.fromMap(value);
       tempChatsMessages.id = key;
-      print("mensaje: ${tempChatsMessages.mensaje}");
+      //print("mensaje: ${tempChatsMessages.mensaje}");
       chatMessages.add(tempChatsMessages);
     });
 
@@ -116,15 +115,15 @@ class ChatMessageService extends ChangeNotifier {
     
     await http.post(url,body: json.encode(mensajeDatos)).then((value){
         print("Mensaje enviado y guardado");
-
+        
         /*Altualizamos los chats del lado del remitente*/
         /*--------------------------------------------*/
         final Map<String, dynamic> chatDatos = {
           'usuario_destinatario': job.nombreSolicitante,
           'ultimo_mensaje': mensaje,
-          'fecha':DateTime.now().toString(),
+          'fecha':mensajeDatos["enviadoAt"],
         };
-        
+
         final url_ = Uri.https(_baseUrl, 'chats/$autor/${job.idSolicitante}.json');
           http.put(url_,body: json.encode(chatDatos)).then((value){
           print("Chat actualizado remitente");
@@ -137,7 +136,7 @@ class ChatMessageService extends ChangeNotifier {
         final Map<String, dynamic> chatDatos_ = {
           'usuario_destinatario': nombre_usuario,
           'ultimo_mensaje': mensaje,
-          'fecha':DateTime.now().toString(),
+          'fecha':mensajeDatos["enviadoAt"],
         };
         
         //Altualizamos los chats del lado del destinatario
@@ -146,14 +145,17 @@ class ChatMessageService extends ChangeNotifier {
           print("Chat actualizado destinatario");
         }).catchError((e){
           print("Chat no actualizado destinatario");
-        });
-        loadChats();
-        chatSelected=chats.last;
-        loadChatMessages();
+        }); 
+        loadChats().then((value) => {chatMessages.add(new ChatMessage(idUser: autor, mensaje: mensaje, enviadoAt: chatDatos["fecha"])),}
+        );
+        //chatSelected=chats.last;
 
+        
     }).catchError((onError){
       print("Mensaje no enviado");
     });
+
+    
     
   }
 
@@ -214,10 +216,12 @@ Future<void> crearMensajeDos(
         }).catchError((e){
           print("Chat no actualizado destinatario");
         });
-
+        
+        loadChats();
         loadChatMessages();
+        notifyListeners();
     });
-
+    notifyListeners();
   }
 
   

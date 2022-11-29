@@ -20,7 +20,7 @@ class _SearchScreen extends State<SearchScreen> {
 
     if (jobsService.isLoading) return const LoadingScreen();
 
-    return Scaffold(
+    return jobsList.length>0?Scaffold(
       backgroundColor: const Color(0xFFF3F2EF),
       body: ListView.builder(
         itemCount: jobsList.length,
@@ -33,6 +33,26 @@ class _SearchScreen extends State<SearchScreen> {
           child: JobCard(job: jobsList[index]),
         ),
       ),
-    );
+    ):_emptyContainer();
   }
+
+  Widget _emptyContainer() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: const [
+          Icon(
+            Icons.error_outline,
+            color: Colors.white,
+            size: 130,
+          ),
+          Text(
+            "No se encontraron ofertas disponibles",
+            style: TextStyle(color: Colors.white),
+          )
+        ],
+      ),
+    );
+   }
 }

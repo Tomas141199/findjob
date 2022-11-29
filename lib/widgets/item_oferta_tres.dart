@@ -67,7 +67,7 @@ class _CardTopBar extends StatelessWidget {
       onPressed:  () async{     
         Navigator.of(context).pop();
         await jobService.eliminarSolicitudesAspirante(idJob,"");
-       
+        NotificationsService.showSnackBar("Se ha cancelado su postulación");
       },
     );
     

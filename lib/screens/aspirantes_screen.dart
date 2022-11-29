@@ -129,6 +129,7 @@ class _SlidableItem extends StatelessWidget {
               onPressed: (context) {
                 //Indicamos la solicitud en la que nos estamos posicionando
                 jobsService.selectedJobSolicitud = job.copy();
+                chatService.chatMessages.clear();
                 var index = chatService.chats
                     .indexWhere((element) => element.id == job.idSolicitante);
                 if (index != -1) {
@@ -139,7 +140,6 @@ class _SlidableItem extends StatelessWidget {
                       arguments: WidgetArguments(edit: true, action: 2));
                 } else {
                   print("No se tiene un chat previo con el usuario");
-                  chatService.chatMessages.clear();
                   Navigator.pushNamed(context, 'chatScreen',
                       arguments: WidgetArguments(edit: true, action: 1));
                 }

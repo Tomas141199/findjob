@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../services/jobs_service.dart';
+import '../services/notifications_service.dart';
 import '../theme/app_theme.dart';
 
 class JobCardDos extends StatelessWidget {
@@ -107,7 +108,9 @@ class _CardTopBar extends StatelessWidget {
                               Navigator.pushNamed(context, 'aspirantes');
                             } else {
                               Navigator.of(context).pop();
-                              alerta(context);
+                              NotificationsService.showSnackBar(
+                              "No se han encontrado postulantes");
+                              //alerta(context);
                             }
                           },
                         ),
@@ -133,7 +136,7 @@ class _CardTopBar extends StatelessWidget {
                                       child: Text("Continuar"),
                                       onPressed: () async {
                                         await jobService.eliminarJobs(idJob);
-
+                                        NotificationsService.showSnackBar("La oferta laboral ha sido eliminada");
                                         Navigator.of(context).pop();
                                       },
                                     ),
@@ -167,17 +170,4 @@ class _CardTopBar extends StatelessWidget {
     );
   }
 
-  void alerta(BuildContext context) {
-    showDialog<String>(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-              content: const Text('No se han encontrado postulantes'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Aceptar'),
-                ),
-              ],
-            ));
-  }
 }

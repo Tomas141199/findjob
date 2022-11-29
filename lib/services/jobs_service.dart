@@ -32,21 +32,25 @@ class JobsService extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     final url = Uri.https(_baseUrl, 'jobs.json');
-    final resp = await http.get(url);
-    final Map<String, dynamic> jobsMap = json.decode(resp.body);
-
-    jobsMap.forEach((key, value) {
-      final tempJob = Job.fromMap(value);
-      tempJob.id = key;
-      jobs.add(tempJob);
-    });
-
-    print("Cargaremos las solicitudes hechas");
-    if (jobs.length >= 0) {
+    await http.get(url).then((value){
+      
+      final Map<String, dynamic> jobsMap = json.decode(value.body);
+      jobsMap.forEach((key, value) {
+        final tempJob = Job.fromMap(value);
+        tempJob.id = key;
+        jobs.add(tempJob);
+      });
       print("Cargaremos las solicitudes hechas");
-      loadSolicitudes();
-      loadMyJobs();
-    }
+      if (jobs.length >= 0) {
+        print("Cargaremos las solicitudes hechas");
+        loadSolicitudes();
+        loadMyJobs();
+      } 
+      
+    }).catchError((onError){
+      print("No se han encontrado elementos");
+  
+    });
 
     isLoading = false;
     notifyListeners();

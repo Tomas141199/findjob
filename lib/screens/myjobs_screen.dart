@@ -23,7 +23,7 @@ class _MyJobsScreen extends State<MyJobsScreen> {
     if (jobsService.isLoading) return const LoadingScreen();
 
     return Scaffold(
-     body: ListView.builder(
+     body: jobsList.length>0? ListView.builder(
         itemCount: jobsList.length,
         itemBuilder: (BuildContext context, int index) => GestureDetector(
           onTap: () {
@@ -32,7 +32,7 @@ class _MyJobsScreen extends State<MyJobsScreen> {
           },
           child: JobCardDos(job: jobsList[index]),
         ),
-      ),
+      ):_emptyContainer(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           jobsService.selectedJob = Job(
@@ -57,5 +57,23 @@ class _MyJobsScreen extends State<MyJobsScreen> {
     );
   }
 
-  
+  Widget _emptyContainer() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: const [
+          Icon(
+            Icons.error_outline,
+            color: Colors.black38,
+            size: 130,
+          ),
+          Text(
+            "Aún no ha publicado alguna oferta",
+            style: TextStyle(color: Colors.grey),
+          )
+        ],
+      ),
+    );
+   }
 }

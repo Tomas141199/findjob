@@ -23,7 +23,7 @@ class _MisSolicitudesScreen extends State<MisSolicitudesScreen>{
     if (jobsService.isLoading) return const LoadingScreen();
 
     
-    return Scaffold(
+    return jobsList.length>0?Scaffold(
       body: ListView.builder(
         itemCount: jobsList.length,
         itemBuilder: (BuildContext context, int index) => GestureDetector(
@@ -34,8 +34,26 @@ class _MisSolicitudesScreen extends State<MisSolicitudesScreen>{
           child: JobCardTres(job: jobsList[index]),
         ),
       ),
-    );
+    ):_emptyContainer();   
   }
 
-
+   Widget _emptyContainer() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: const [
+          Icon(
+            Icons.error_outline,
+            color: Colors.black38,
+            size: 130,
+          ),
+          Text(
+            "Aún no envia alguna solicitud",
+            style: TextStyle(color: Colors.grey),
+          )
+        ],
+      ),
+    );
+   }
 }

@@ -330,7 +330,10 @@ class _FormJob extends StatelessWidget {
                                     await jobService
                                         .saveOrCreateJob(jobForm.job);
                                     Navigator.of(context).pop();
-                                    alerta(context, accion);
+                                    
+                                    accion==2?NotificationsService.showSnackBar("La oferta ha sido publicada"):
+                                    NotificationsService.showSnackBar("Cambios guarados");
+                                    
                                   },
                                 ),
                               ],
@@ -341,24 +344,7 @@ class _FormJob extends StatelessWidget {
                       color: AppTheme.deepBlue,
                       child: Text(texto, style: TextStyle(color: Colors.white)),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 10),
-                      child: Visibility(
-                        visible: accion == 1,
-                        child: MaterialButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
-                          height: 50.0,
-                          onPressed: () async {
-                            await jobService.loadPostulantes(job.id);
-                            Navigator.pushNamed(context, 'aspirantes');
-                          },
-                          color: AppTheme.primary,
-                          child: Text("Ver postulantes",
-                              style: TextStyle(color: Colors.white)),
-                        ),
-                      ),
-                    ),
+                    
                   ],
                 ),
               ],

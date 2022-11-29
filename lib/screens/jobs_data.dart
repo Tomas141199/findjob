@@ -277,7 +277,7 @@ class _DataJob extends StatelessWidget {
                                         await jobService
                                             .agregarAspiranteJob(jobForm.job,userService.authUserData.tel.toString());
                                         Navigator.of(context).pop();
-                                        alerta(context);
+                                        NotificationsService.showSnackBar("Su postulación ha sido enviada");
                                       }
                                     },
                                   ),

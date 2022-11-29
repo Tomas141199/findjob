@@ -21,7 +21,7 @@ class _MessagesScreen extends State<MessagesScreen> {
 
    return Scaffold(
     
-     body: ListView.builder(
+     body: chats.length>0? ListView.builder(
       
         itemCount: chats.length,
         itemBuilder: (BuildContext context, int index) => GestureDetector(
@@ -38,7 +38,27 @@ class _MessagesScreen extends State<MessagesScreen> {
           },
           child: ItemChat(chat: chats[index]),
         ),
-      ),
+      ):_emptyContainer(),
    );
   }
+
+  Widget _emptyContainer() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: const [
+          Icon(
+            Icons.error_outline,
+            color: Colors.black38,
+            size: 130,
+          ),
+          Text(
+            "Sin chats disponibles",
+            style: TextStyle(color: Colors.grey),
+          )
+        ],
+      ),
+    );
+   }
 }

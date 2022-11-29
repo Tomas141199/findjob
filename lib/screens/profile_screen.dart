@@ -249,7 +249,7 @@ class _ProfileScreenBody extends StatelessWidget {
         );
       },
       elevation: 4,
-      backgroundColor: AppTheme.deepBlue,
+      backgroundColor: AppTheme.primary,
       child: const Icon(Icons.edit),
     );
   }

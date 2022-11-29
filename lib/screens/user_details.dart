@@ -22,7 +22,7 @@ class UserProfileScreen extends StatelessWidget {
             [
               _PosterAndTitle(user),
               _Overview(user.description!, ""),
-              _Overview(user.description!, ""),
+              _OverviewVerificacion(user, "Validación de datos"),
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
                 child: TextButton(
@@ -183,3 +183,59 @@ class _Overview extends StatelessWidget {
         ));
   }
 }
+
+class _OverviewVerificacion extends StatelessWidget {
+  final UserData user;
+  final String title;
+  const _OverviewVerificacion(this.user, this.title);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+        child: Column(
+          crossAxisAlignment:CrossAxisAlignment.start,
+          children: <Widget>[
+          
+            Text(
+              title,
+              style: AppTheme.subEncabezadoDos,
+            ),
+            Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        WidgetSpan(
+                          child: Icon(Icons.check),
+                        ),
+                        TextSpan(
+                          text: " Telefono verificado",
+                          style: AppTheme.datos,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        WidgetSpan(
+                          child: Icon(Icons.close),
+                        ),
+                        TextSpan(
+                          text: " Correo electronico no verificado",
+                          style: AppTheme.datos,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+          ],
+        ));
+  }
+}
+
