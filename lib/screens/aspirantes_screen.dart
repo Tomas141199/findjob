@@ -16,7 +16,6 @@ class AspirantesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     /**Cuadro de dialogo */
     final jobsService = Provider.of<JobsService>(context);
     final userDataService = Provider.of<UserDataService>(context);
@@ -54,11 +53,11 @@ class AspirantesScreen extends StatelessWidget {
           itemBuilder: (BuildContext context, int index) => GestureDetector(
             onTap: () async {
               await userDataService
-                  .setUserSelected(jobsList[index].idSolicitante).then((value) => {
-                      print(jobsList[index].idSolicitante),
-                      Navigator.pushNamed(context, 'userDetails'),
-                  });
-
+                  .setUserSelected(jobsList[index].idSolicitante)
+                  .then((value) => {
+                        print(jobsList[index].idSolicitante),
+                        Navigator.pushNamed(context, 'userDetails'),
+                      });
             },
             child: Hero(
               tag: jobsList[index].idSolicitante!,
@@ -81,9 +80,8 @@ class _SlidableItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final jobsService = Provider.of<JobsService>(context);
-    
+
     final chatService = Provider.of<ChatMessageService>(context);
     final List<ChatUser> chats = chatService.chats;
     jobsService.selectedJobSolicitud = this.job;
@@ -91,7 +89,7 @@ class _SlidableItem extends StatelessWidget {
     Widget cancelButton = TextButton(
       style: AppTheme.flatButtonStyle,
       child: Text("Cancelar"),
-      onPressed:  () {
+      onPressed: () {
         Navigator.of(context).pop();
       },
     );
@@ -99,12 +97,13 @@ class _SlidableItem extends StatelessWidget {
     Widget continueButton = TextButton(
       style: AppTheme.flatButtonStyle,
       child: Text("Continuar"),
-      onPressed:  () async{     
+      onPressed: () async {
         Navigator.of(context).pop();
-        await jobsService.eliminarSolicitudesAspirante(jobsService.selectedJobSolicitud.idEmpleo.toString(),jobsService.selectedJobSolicitud.idSolicitante.toString());
+        await jobsService.eliminarSolicitudesAspirante(
+            jobsService.selectedJobSolicitud.idEmpleo.toString(),
+            jobsService.selectedJobSolicitud.idSolicitante.toString());
       },
     );
-
 
     return Slidable(
         startActionPane: ActionPane(
@@ -129,19 +128,21 @@ class _SlidableItem extends StatelessWidget {
               label: 'Mensaje',
               onPressed: (context) {
                 //Indicamos la solicitud en la que nos estamos posicionando
-                jobsService.selectedJobSolicitud=job.copy();
-                var index=chatService.chats.indexWhere((element) => element.id == job.idSolicitante);
-                if(index!=-1){
+                jobsService.selectedJobSolicitud = job.copy();
+                var index = chatService.chats
+                    .indexWhere((element) => element.id == job.idSolicitante);
+                if (index != -1) {
                   print("Ya se tiene un chat previo con el index ${index}");
                   chatService.chatSelected = chats[index].copy();
                   chatService.loadChatMessages();
-                  Navigator.pushNamed(context, 'chatScreen',arguments: WidgetArguments(edit: true,action: 2) );
-                }else{
+                  Navigator.pushNamed(context, 'chatScreen',
+                      arguments: WidgetArguments(edit: true, action: 2));
+                } else {
                   print("No se tiene un chat previo con el usuario");
                   chatService.chatMessages.clear();
-                  Navigator.pushNamed(context, 'chatScreen',arguments: WidgetArguments(edit: true,action: 1));
+                  Navigator.pushNamed(context, 'chatScreen',
+                      arguments: WidgetArguments(edit: true, action: 1));
                 }
-                
               },
             ),
           ],
@@ -154,23 +155,26 @@ class _SlidableItem extends StatelessWidget {
                 icon: Icons.archive,
                 label: 'Rechazar',
                 onPressed: (context) {
-                  jobsService.selectedJobSolicitud=job.copy();
-                  print("IdSolicitante ${jobsService.selectedJobSolicitud.idSolicitante}");
-                  print("IdEmpleo ${jobsService.selectedJobSolicitud.idEmpleo}");
+                  jobsService.selectedJobSolicitud = job.copy();
+                  print(
+                      "IdSolicitante ${jobsService.selectedJobSolicitud.idSolicitante}");
+                  print(
+                      "IdEmpleo ${jobsService.selectedJobSolicitud.idEmpleo}");
 
                   showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text("Aviso"),
-                              content: Text("Al continuar con esta operación se detendra el proceso de postulación para dicho aspirante. ¿Desea continuar con la operación?"),
-                                actions: [
-                                  cancelButton,
-                                  continueButton,
-                               ],
-                              );
-                            },
-                          );
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("Aviso"),
+                        content: Text(
+                            "Al continuar con esta operación se detendra el proceso de postulación para dicho aspirante. ¿Desea continuar con la operación?"),
+                        actions: [
+                          cancelButton,
+                          continueButton,
+                        ],
+                      );
+                    },
+                  );
                 })
           ],
         ),

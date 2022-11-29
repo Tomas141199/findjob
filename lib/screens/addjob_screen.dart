@@ -64,7 +64,7 @@ class _JobBodyScreen extends StatelessWidget {
                       onPressed: () async {
                         final picker = ImagePicker();
                         final PickedFile? pickedFile = await picker.getImage(
-                            source: ImageSource.camera, imageQuality: 100);
+                            source: ImageSource.gallery, imageQuality: 100);
                         if (pickedFile == null) {
                           return;
                         }
