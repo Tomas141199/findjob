@@ -48,7 +48,7 @@ class AppTheme {
   );
 
   static const TextStyle datos = TextStyle(
-    fontSize: 14.0,
+    fontSize: 15.0,
     color: textColor,
   );
   static final ThemeData lightTheme = ThemeData.light().copyWith(

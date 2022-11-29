@@ -13,11 +13,14 @@ class _JobsScreen extends State<JobsScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      
       child: DefaultTabController(
         length: 2,
         child: Scaffold(
+          
           appBar: AppBar(
-            backgroundColor: Colors.transparent,
+            
+            backgroundColor: Colors.white,
             elevation: 0,
             automaticallyImplyLeading: false,
             flexibleSpace: const SafeArea(
@@ -34,7 +37,9 @@ class _JobsScreen extends State<JobsScreen> {
             ),
           ),
           body: const TabBarView(
+            
             children: <Widget>[
+              
               MyJobsScreen(),
               MisSolicitudesScreen(),
             ],

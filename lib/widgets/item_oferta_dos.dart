@@ -14,7 +14,7 @@ class JobCardDos extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      margin: const EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -49,7 +49,7 @@ class _CardTopBar extends StatelessWidget {
     final jobService = Provider.of<JobsService>(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      margin: const EdgeInsets.only(bottom: 10, top: 20),
+      margin: const EdgeInsets.only(bottom:10, top: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -73,12 +73,12 @@ class _CardTopBar extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         establishment,
-                        style: const TextStyle(fontWeight: FontWeight.w500),
+                        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
                       ),
                       const SizedBox(height: 5),
                       Text(
                         "Oferta publicada el- ${DateFormat('yMd').format(DateTime.parse(published))}",
-                        style: TextStyle(color: Colors.grey.shade500),
+                        style: TextStyle(color: Colors.grey.shade500,fontSize: 14),
                       ),
                     ],
                   ),

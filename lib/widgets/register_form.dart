@@ -212,7 +212,7 @@ class _RegisterForm extends State<RegisterForm> {
 
                 //Decoración del textFormField
                 decoration: const InputDecoration(
-                  labelText: 'Descripción del empleo',
+                  labelText: 'Descripción del usuario',
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 20, horizontal: 10),
                 ),

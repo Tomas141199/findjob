@@ -41,15 +41,20 @@ class _JobBodyScreen extends StatelessWidget {
               Container(
                 decoration: _backgroundScaffold(),
                 child: Column(
-                  children: [
+                  children:<Widget> [
                     Padding(
                       padding:
                           EdgeInsets.only(top: 30.0, right: 25.0, left: 25.0),
                       child: _DataJob(),
                     ),
-                    JobSlider(
+                    Padding(
+                      padding:EdgeInsets.only(bottom:40), 
+
+                      child:JobSlider(
                         title: "Encuentra más opciones",
                         jobs: jobProvider.allJobs),
+                     ),
+                    
                   ],
                 ),
               ),
@@ -81,7 +86,6 @@ class _DataJob extends StatelessWidget {
     //Cada accion equivale a una posición de este arreglo
     List<String> acciones = ["Postularse"];
     final userService = Provider.of<UserDataService>(context);
-
     final String texto;
     final args = ModalRoute.of(context)!.settings.arguments as WidgetArguments;
     bool modoEdicion = args.edit ? false : true;
@@ -265,21 +269,19 @@ class _DataJob extends StatelessWidget {
                                 actions: [
                                   cancelButton,
                                   TextButton(
-                                      style: AppTheme.flatButtonStyle,
-                                      child: Text("Continuar"),
-                                      onPressed:  () async{     
-                                          if(await jobService.postularseJob(jobForm.job, userService.authUserData.tel.toString())){
-                                            print("Postulado");
-                                            await jobService.agregarAspiranteJob(jobForm.job,userService.authUserData.tel.toString());  
-                                            Navigator.of(context).pop();
-                                            alerta(context);
-                                          }
-                                        },  
-                                      ),
-                                    ],
-                                  );
-                                },
-                               
+                                    style: AppTheme.flatButtonStyle,
+                                    child: Text("Continuar"),
+                                    onPressed: () async {
+                                      if (await jobService.postularseJob(jobForm.job,userService.authUserData.tel.toString())) {
+                                        print("Postulado");
+                                        await jobService
+                                            .agregarAspiranteJob(jobForm.job,userService.authUserData.tel.toString());
+                                        Navigator.of(context).pop();
+                                        alerta(context);
+                                      }
+                                    },
+                                  ),
+                                ],
                               );
                             },
                           );
@@ -332,17 +334,17 @@ class _DataJob extends StatelessWidget {
 
   void alerta(BuildContext context) {
     showDialog<String>(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-              content: const Text(
-                  'Su postulación ha sido enviada al empleador/empresa correspondiente.'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Aceptar'),
-                ),
-              ],
-            ));
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+      content: const Text(
+          'Su postulación ha sido enviada al empleador/empresa correspondiente.'),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Aceptar'),
+        ),
+      ],
+    ));
   }
 }
 
@@ -361,22 +363,21 @@ class SliverAppBarWidget extends StatelessWidget {
     bool modoEdicion = args.edit;
 
     return SliverAppBar(
-      backgroundColor: AppTheme.primary,
+      backgroundColor: Color.fromRGBO(4, 135, 217, 1),
       expandedHeight: 300,
       floating: false,
       pinned: true,
       flexibleSpace: FlexibleSpaceBar(
-        centerTitle: true,
         titlePadding: const EdgeInsets.all(0),
         title: Container(
           width: double.infinity,
-          alignment: Alignment.bottomCenter,
-          padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+          alignment: Alignment.bottomLeft,
+          padding: EdgeInsets.only(bottom: 20, left: 45, right: 10),
           color: Colors.black12,
           child: Text(
             jobService.selectedJob.title,
             style: const TextStyle(fontSize: 16),
-            textAlign: TextAlign.center,
+            textAlign:TextAlign.center,
           ),
         ),
         background: Opacity(

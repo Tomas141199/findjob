@@ -20,7 +20,9 @@ class _MessagesScreen extends State<MessagesScreen> {
     final List<ChatUser> chats = chatService.chats;
 
    return Scaffold(
+    
      body: ListView.builder(
+      
         itemCount: chats.length,
         itemBuilder: (BuildContext context, int index) => GestureDetector(
           onTap: () async{

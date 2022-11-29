@@ -13,10 +13,10 @@ class PostulanteWidget extends StatelessWidget {
     return ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 24),
         title: Text(jobSolicitud.nombreSolicitante,
-            style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 18)),
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
         subtitle: Text(
           "Postulado - ${DateFormat('yMd').format(DateTime.parse(jobSolicitud.solicitadoAt))}",
-          style: TextStyle(color: Colors.grey.shade500),
+          style: TextStyle(color: Colors.grey.shade500,fontSize: 14),
         ),
         leading: CircleAvatar(
           backgroundColor: AppTheme.getRandomColor(),
@@ -26,7 +26,7 @@ class PostulanteWidget extends StatelessWidget {
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              fontSize: 20,
+              fontSize: 15,
             ),
           ),
         ));

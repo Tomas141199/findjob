@@ -1,5 +1,6 @@
 import 'package:findjob_app/models/job.dart';
 import 'package:findjob_app/models/models.dart';
+import 'package:findjob_app/services/user_data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +16,7 @@ class ItemChat extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      margin: const EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -45,9 +46,10 @@ class _CardTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final jobService = Provider.of<JobsService>(context);
+    final userService = Provider.of<UserDataService>(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      margin: const EdgeInsets.only(bottom: 10, top: 20),
+      margin: const EdgeInsets.only(bottom: 10, top: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -71,12 +73,12 @@ class _CardTopBar extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         "${this.usuario_destinatario}",
-                        style: const TextStyle(fontWeight: FontWeight.w500),
+                        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
                       ),
                       const SizedBox(height: 5),
                       Text(
                         "${this.ultimo_mensaje}",
-                        style: TextStyle(color: Colors.grey.shade500),
+                        style: TextStyle(color: Colors.grey.shade500,fontSize: 14),
                       ),
                     ],
                   ),
@@ -100,20 +102,17 @@ class _CardTopBar extends StatelessWidget {
                           leading: Icon(Icons.person),
                           title: Text('Ver perfil del usuario'),
                           onTap: () async {
+                            print("idUsuario ${idChat}");
+                            
+                            await userService.setUserSelected(idChat).then((value){
+                              print("Datos del usuario encontrado");
+                              Navigator.of(context).pop();
+                              Navigator.pushNamed(context, 'userDetails');
+                            });
                             print("tap");
                           },
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 10, left: 5, right: 5),
-                        child: ListTile(
-                          leading: Icon(Icons.delete),
-                          title: Text('Eliminar publicación'),
-                          onTap: () async {
-                            print("Tap");
-                          },
-                        ),
-                      ),
+                      ),  
                     ],
                   );
                 },
