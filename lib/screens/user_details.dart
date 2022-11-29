@@ -1,8 +1,11 @@
+import 'dart:html';
+
 import 'package:findjob_app/models/models.dart';
 import 'package:findjob_app/services/services.dart';
 import 'package:findjob_app/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UserProfileScreen extends StatelessWidget {
   const UserProfileScreen({super.key});
@@ -13,20 +16,42 @@ class UserProfileScreen extends StatelessWidget {
     final userService = Provider.of<UserDataService>(context);
     final user = userService.selectedUser;
     return Scaffold(
-      
-        body: 
-        CustomScrollView(
-          
+        body: CustomScrollView(
       slivers: [
         _CustomAppBar(user),
         SliverList(
-          
-            delegate: SliverChildListDelegate([
-          _PosterAndTitle(user),
-          _Overview(user.description!,""),
-          _Overview("Los datos de este usuario aún no han sido verificados por el usuario.","Verificación de datos"),
-          _Overview("Este usuario no ha subido documentos para su visualización.","Documentos"),
-        ]))
+          delegate: SliverChildListDelegate(
+            [
+              _PosterAndTitle(user),
+              _Overview(user.description!, ""),
+              _Overview(user.description!, ""),
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: TextButton(
+                  onPressed: () async {
+                    final url = user.docUrl;
+                    if (url != null) {
+                      if (await canLaunchUrl(Uri.parse(url))) {
+                        await launchUrl(Uri.parse(url));
+                      } else {
+                        throw "Could not launch $url";
+                      }
+                    } else {
+                      NotificationsService.showSnackBar(
+                          "Este usuario no cuenta con documentación");
+                    }
+                  },
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all(const StadiumBorder()),
+                  ),
+                  child: const Text("Ver Documentos",
+                      style: AppTheme.subEncabezadoDos),
+                ),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
+        )
       ],
     ));
   }
@@ -52,11 +77,11 @@ class _CustomAppBar extends StatelessWidget {
           alignment: Alignment.bottomCenter,
           padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
           color: Colors.black12,
-          
         ),
         background: FadeInImage(
           placeholder: const AssetImage('assets/giphy.gif'),
-          image: NetworkImage(user.photoUrl??"https://www.fcmlindia.com/images/fifty-days-campaign/no-image.jpg"),
+          image: NetworkImage(user.photoUrl ??
+              "https://www.fcmlindia.com/images/fifty-days-campaign/no-image.jpg"),
           fit: BoxFit.cover,
         ),
       ),
@@ -78,60 +103,56 @@ class _PosterAndTitle extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10),
       margin: const EdgeInsets.only(bottom: 0, top: 10),
       child: Row(
-        
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Padding(padding: EdgeInsets.only(left:20,right: 10,top: 10),
-          
-            child:Hero(
+          Padding(
+            padding: EdgeInsets.only(left: 20, right: 10, top: 10),
+            child: Hero(
               tag: user.id!,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: FadeInImage(
                   placeholder: const AssetImage('assets/no-image.png'),
-                  image: NetworkImage(user.photoUrl??"https://www.fcmlindia.com/images/fifty-days-campaign/no-image.jpg"),
+                  image: NetworkImage(user.photoUrl ??
+                      "https://www.fcmlindia.com/images/fifty-days-campaign/no-image.jpg"),
                   height: 150,
                 ),
               ),
             ),
           ),
-
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                
-                Padding(padding: EdgeInsets.only(left: 20,right: 10),
-                child:Text(user.displayName,
-                  style: TextStyle(fontSize: 20,color: AppTheme.deepBlue, fontWeight: FontWeight.w500),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2),
+                Padding(
+                  padding: EdgeInsets.only(left: 20, right: 10),
+                  child: Text(user.displayName,
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: AppTheme.deepBlue,
+                          fontWeight: FontWeight.w500),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2),
                 ),
-
-                Padding(padding: EdgeInsets.only(left: 20,right: 10),
-                  child:Text(
-                    user.tel.toString(),
-                    style: textTheme.subtitle1,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2
-                  ),
+                Padding(
+                  padding: EdgeInsets.only(left: 20, right: 10),
+                  child: Text(user.tel.toString(),
+                      style: textTheme.subtitle1,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2),
                 ),
-                Padding(padding: EdgeInsets.only(left: 20,right: 10),
-                  child:Text(
-                    user.contactEmail,
-                    style: textTheme.subtitle1,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2
-                  ),
+                Padding(
+                  padding: EdgeInsets.only(left: 20, right: 10),
+                  child: Text(user.contactEmail,
+                      style: textTheme.subtitle1,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2),
                 ),
-                 
               ],
             ),
           ),
-        
         ],
       ),
-
     );
   }
 }
@@ -144,28 +165,23 @@ class _Overview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
-      child: Wrap(
-        alignment:WrapAlignment.start,
-        children: <Widget>[
-
-          title.length>0?Text(
-            title,
-            style: AppTheme.subEncabezadoDos,
-          ):Text(
-            '',
-          ),
-
-          Text(
-            "\n"+description+"\n",
-            style: AppTheme.datos,
-          ),
-
-        ],
-      )
-      
-      
-     
-    );
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+        child: Wrap(
+          alignment: WrapAlignment.start,
+          children: <Widget>[
+            title.length > 0
+                ? Text(
+                    title,
+                    style: AppTheme.subEncabezadoDos,
+                  )
+                : Text(
+                    '',
+                  ),
+            Text(
+              "\n" + description + "\n",
+              style: AppTheme.datos,
+            ),
+          ],
+        ));
   }
 }

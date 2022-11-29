@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
@@ -172,6 +173,26 @@ class _EditFormUser extends State<EditFormUser> {
               ),
             ),
           ),
+          const SizedBox(height: 16),
+          Column(
+            children: [
+              FloatingActionButton(
+                elevation: 0,
+                onPressed: () async {
+                  final result =
+                      await FilePicker.platform.pickFiles(allowMultiple: false);
+                  if (result == null) return;
+                  final file = result.files.first;
+                  userDataService.updateSelectedUserDoc(file.path!);
+                  NotificationsService.showSnackBar(
+                      "${file.name} cargado correctamente");
+                },
+                child: const Icon(Icons.upload_file_rounded),
+              ),
+              const SizedBox(height: 10),
+              const Text("Subir CV o Documento"),
+            ],
+          ),
           Padding(
             padding: const EdgeInsets.only(top: 30.0, bottom: 30.0),
             child: MaterialButton(
@@ -186,7 +207,16 @@ class _EditFormUser extends State<EditFormUser> {
                       if (!userDataService.isValidForm()) return;
                       userDataService.authUserData = userData.copy();
                       print("Actualizando datos del usuario");
+
+                      String? newDocUrl = await userDataService.uploadFile();
+                      if (newDocUrl != null) {
+                        String? docJPG =
+                            newDocUrl.replaceFirst(RegExp(r".pdf"), ".jpg");
+                        userDataService.authUserData.docUrl = docJPG;
+                      }
+
                       await userDataService.updateCurrentUser();
+                      NotificationsService.showSnackBar("Cambios guardados");
                     },
               color: AppTheme.primary,
               child: Text(userDataService.isLoading ? 'Espere' : 'Guardar',

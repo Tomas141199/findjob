@@ -5,6 +5,7 @@ import 'package:findjob_app/services/services.dart';
 import 'package:findjob_app/theme/app_theme.dart';
 import 'package:findjob_app/models/models.dart';
 import 'package:findjob_app/screens/screens.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -33,7 +34,7 @@ class _ProfileScreenBody extends StatelessWidget {
     print(userAuth.displayName);
     print(userAuth.docUrl);
     print(userAuth.ownerId);
-    print(userAuth.photoUrl); 
+    print(userAuth.photoUrl);
     print(userAuth.tel);
 
     return SafeArea(
@@ -64,7 +65,8 @@ class _ProfileScreenBody extends StatelessWidget {
                       child: ClipOval(
                         child: SizedBox.fromSize(
                           size: const Size.fromRadius(90), // Image radius
-                          child:  _profileImage(userAuth.photoUrl??"https://www.fcmlindia.com/images/fifty-days-campaign/no-image.jpg"),
+                          child: _profileImage(userAuth.photoUrl ??
+                              "https://www.fcmlindia.com/images/fifty-days-campaign/no-image.jpg"),
                         ),
                       ),
                     ),
@@ -82,10 +84,12 @@ class _ProfileScreenBody extends StatelessWidget {
                     style: AppTheme.subEncabezadoDos,
                   ),
                 ),
-                 Padding(
+                Padding(
                     padding: EdgeInsets.only(top: 20.0),
                     child: Text(
-                      userAuth.description!=null?userAuth.description.toString():"No se ha ingresado los datos de este apartado.",
+                      userAuth.description != null
+                          ? userAuth.description.toString()
+                          : "No se ha ingresado los datos de este apartado.",
                       style: AppTheme.datos,
                     )),
                 //Información de contacto del usuario
@@ -99,13 +103,13 @@ class _ProfileScreenBody extends StatelessWidget {
                 Padding(
                     padding: const EdgeInsets.only(top: 20.0),
                     child: RichText(
-                      text:  TextSpan(
+                      text: TextSpan(
                         children: [
                           WidgetSpan(
                             child: Icon(Icons.phone),
                           ),
                           TextSpan(
-                            text:" "+userAuth.tel.toString().toString(),
+                            text: " " + userAuth.tel.toString().toString(),
                             style: AppTheme.datos,
                           ),
                         ],
@@ -114,35 +118,44 @@ class _ProfileScreenBody extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: RichText(
-                    text:  TextSpan(
+                    text: TextSpan(
                       children: [
                         WidgetSpan(
                           child: Icon(Icons.email_rounded),
                         ),
                         TextSpan(
-                          text:" "+userAuth.contactEmail.toString(),
+                          text: " " + userAuth.contactEmail.toString(),
                           style: AppTheme.datos,
                         ),
                       ],
                     ),
                   ),
                 ),
-                //Verificación de los datos
-                const Padding(
-                  padding: EdgeInsets.only(top: 20.0),
-                  child: Text(
-                    'Verificación de datos',
-                    style: AppTheme.subEncabezadoDos,
-                  ),
-                ),
                 //Carga de documentos
-                const Padding(
-                  padding: EdgeInsets.only(top: 20.0),
-                  child: Text(
-                    'Documentos',
-                    style: AppTheme.subEncabezadoDos,
+                Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: TextButton(
+                    onPressed: () async {
+                      final url = userDataService.authUserData.docUrl;
+                      if (url != null) {
+                        if (await canLaunchUrl(Uri.parse(url!))) {
+                          await launchUrl(Uri.parse(url));
+                        } else {
+                          throw "Could not launch $url";
+                        }
+                      } else {
+                        NotificationsService.showSnackBar(
+                            "Aun no cuentas con ningun documento");
+                      }
+                    },
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all(const StadiumBorder()),
+                    ),
+                    child: const Text("Ver Documentos",
+                        style: AppTheme.subEncabezadoDos),
                   ),
                 ),
+                const SizedBox(height: 20),
               ],
             ),
           ),

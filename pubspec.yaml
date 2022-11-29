@@ -32,6 +32,7 @@ dependencies:
   cached_network_image: ^3.2.2
   converter: ^0.3.5
   cupertino_icons: ^1.0.2
+  file_picker: ^5.2.3
   flutter:
     sdk: flutter
   flutter_secure_storage: ^6.0.0
