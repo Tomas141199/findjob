@@ -60,18 +60,6 @@ class _ProfileScreenBody extends StatelessWidget {
                     border: Border.all(
                         color: const Color.fromRGBO(13, 13, 13, 0.8), width: 2),
                   ),
-<<<<<<< Updated upstream
-                  child: CircleAvatar(
-                    radius: 150,
-                    backgroundColor: const Color.fromRGBO(13, 13, 13, 0.8),
-                    child: Padding(
-                      padding: const EdgeInsets.all(0), // Border radius
-                      child: ClipOval(
-                        child: SizedBox.fromSize(
-                          size: const Size.fromRadius(90), // Image radius
-                          child: _profileImage(userAuth.photoUrl ??
-                              "https://www.fcmlindia.com/images/fifty-days-campaign/no-image.jpg"),
-=======
                   child: Stack(
                     children: [
                       CircleAvatar(
@@ -85,7 +73,6 @@ class _ProfileScreenBody extends StatelessWidget {
                               child: getImage(userAuth.photoUrl),
                             ),
                           ),
->>>>>>> Stashed changes
                         ),
                       ),
                       Positioned(
@@ -101,8 +88,6 @@ class _ProfileScreenBody extends StatelessWidget {
                             if (pickedFile == null) {
                               return;
                             }
-                            //jobService
-                            //.updateSelectedProductImage(pickedFile.path);
                             userDataService
                                 .updateSelectedUserImage(pickedFile.path);
                             String? result =

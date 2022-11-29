@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:findjob_app/models/models.dart';
 import 'package:findjob_app/services/services.dart';
 import 'package:findjob_app/theme/app_theme.dart';
