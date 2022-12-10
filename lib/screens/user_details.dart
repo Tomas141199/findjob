@@ -21,7 +21,8 @@ class UserProfileScreen extends StatelessWidget {
           delegate: SliverChildListDelegate(
             [
               _PosterAndTitle(user),
-              _Overview(user.description!, ""),
+              _Overview(
+                  user.description ?? "No Cuenta con Alguna Descripcion", ""),
               _OverviewVerificacion(user, "Validación de datos"),
               Padding(
                 padding: const EdgeInsets.only(top: 20.0),
@@ -194,48 +195,45 @@ class _OverviewVerificacion extends StatelessWidget {
     return Container(
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
         child: Column(
-          crossAxisAlignment:CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-          
             Text(
               title,
               style: AppTheme.subEncabezadoDos,
             ),
             Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        WidgetSpan(
-                          child: Icon(Icons.check),
-                        ),
-                        TextSpan(
-                          text: " Telefono verificado",
-                          style: AppTheme.datos,
-                        ),
-                      ],
+              padding: const EdgeInsets.only(top: 10.0),
+              child: RichText(
+                text: TextSpan(
+                  children: [
+                    WidgetSpan(
+                      child: Icon(Icons.check),
                     ),
-                  ),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: RichText(
-                    text: TextSpan(
-                      children: [
-                        WidgetSpan(
-                          child: Icon(Icons.close),
-                        ),
-                        TextSpan(
-                          text: " Correo electronico no verificado",
-                          style: AppTheme.datos,
-                        ),
-                      ],
+                    TextSpan(
+                      text: " Telefono verificado",
+                      style: AppTheme.datos,
                     ),
-                  ),
+                  ],
                 ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: RichText(
+                text: TextSpan(
+                  children: [
+                    WidgetSpan(
+                      child: Icon(Icons.close),
+                    ),
+                    TextSpan(
+                      text: " Correo electronico no verificado",
+                      style: AppTheme.datos,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ));
   }
 }
-

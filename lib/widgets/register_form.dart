@@ -32,6 +32,7 @@ class _RegisterForm extends State<RegisterForm> {
 
     final args = ModalRoute.of(context)!.settings.arguments as WidgetArguments;
     bool modoEdicion = args.edit;
+    final userDataService = Provider.of<UserDataService>(context);
 
     return Form(
       key: registerForm.formKey,
@@ -249,6 +250,7 @@ class _RegisterForm extends State<RegisterForm> {
                       );
 
                       if (errorMessage == null) {
+                        userDataService.loadCurrentUser();
                         Navigator.pushReplacementNamed(context, 'home');
                       } else {
                         registerForm.isLoading = false;

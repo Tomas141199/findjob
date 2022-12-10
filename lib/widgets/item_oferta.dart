@@ -108,11 +108,14 @@ class _CardPoster extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        width: double.infinity,
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: (photoUrl != null)
             ? FadeInImage(
                 placeholder: const AssetImage("assets/giphy.gif"),
-                image: NetworkImage(photoUrl!))
+                image: NetworkImage(photoUrl!),
+                fit: BoxFit.fill,
+              )
             : const Image(
                 image: AssetImage("assets/no-image.png"),
               ));
